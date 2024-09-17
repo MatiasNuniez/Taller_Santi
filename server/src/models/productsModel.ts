@@ -2,30 +2,34 @@ import mongoose from "mongoose";
 import { productInterface } from "../interfaces/productInterface";
 
 class ProductModel {
-    public _model: mongoose.Model<productInterface>
+    public _model: mongoose.Model<productInterface>;
 
-    constructor(){
+    constructor() {
         const productModel = new mongoose.Schema<productInterface>({
-            nombre:{
-                type:String,
-                require:true
+            nombre: {
+                type: String,
+                required: true
             },
-            descripcion:{
-                type:String,
-                required:true,
-                minlength:10
+            descripcion: {
+                type: String,
+                required: true,
+                minlength: 10
             },
-            costo:{
-                type:Number,
-                required:true
+            costo: {
+                type: Number,
+                required: true
             },
-            precio_u:{
-                type:Number,
-                required:true
+            precio_u: {
+                type: Number,
+                required: true
+            },
+            idProvider: {
+                type: String,
+                require: true
             }
-        })
-        this._model = mongoose.model('ProductModel', productModel)
+        });
+        this._model = mongoose.model('Products', productModel);
     }
 }
 
-export const ModelProduct = new ProductModel()._model; 
+export const productModel = new ProductModel()._model;

@@ -29,10 +29,11 @@ class providersModel {
             },
             cuit: {
                 type: String,
-                required: true
+                required: true,
+                unique:true
             }
         })
-        this._model = mongoose.model("ProviderModel", providerModel)
+        this._model = mongoose.model("Providers", providerModel)
     }
 
 }

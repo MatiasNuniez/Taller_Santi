@@ -7,7 +7,7 @@ export class LoginController {
 
     private key: string;
 
-    constructor(){
+    constructor() {
         this.key = SECRETKEY || '';
     }
 
@@ -22,12 +22,12 @@ export class LoginController {
             if ((user) && (user.password === data.password) && (this.key !== '')) {
                 const payload = { check: true }
                 const token = jsonwebtoken.sign(payload, this.key)
-                res.status(201).send({token: token})
-            }else{
-                res.status(400).json({Error:'No se encontro el usuario registrado, registrelo primero'})
+                res.status(201).send({ token: token, DNI: user.DNI })
+            } else {
+                res.status(400).json({ Error: 'No se encontro el usuario registrado, registrelo primero' })
             }
         } catch (error) {
-            res.status(500).json({Error:'Error al intentar iniciar sesion'})
+            res.status(500).json({ Error: 'Error al intentar iniciar sesion' })
         }
 
     }

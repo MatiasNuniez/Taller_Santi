@@ -8,7 +8,7 @@ export class RegisterRouter extends BaseRouter<RegisterController>{
     constructor() {
         super(RegisterController)
     }
-
+    // Rutas para las peticiones de register
     routes(): void {
         this.router.post('/register', (req, res) => this.controller.regUser(req, res))
     }

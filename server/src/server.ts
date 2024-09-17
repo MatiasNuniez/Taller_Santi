@@ -2,6 +2,10 @@ import express from 'express'
 import { DataBase } from './db'
 import { LoginRouter } from './routes/loginRouter'
 import { RegisterRouter } from './routes/registerRouter'
+import { ProviderRouter} from './routes/providerRouter'
+import { ProductRouter } from './routes/productRouter'
+import cors from 'cors'
+
 
 class Server extends DataBase {
     public app: express.Application = express()
@@ -10,9 +14,18 @@ class Server extends DataBase {
         super()
         this.listen()
         this.app.use(express.json())
+        this.config()
         this.connect()
         this.app.use('/api', this.routes())
+    }
 
+    public config() {
+        // Aplica CORS
+        this.app.use(cors({
+            origin: '*',   // Cambiar '*' a una URL específica si necesitas habilitar credenciales
+        }))
+        // Asegúrate de que express pueda parsear JSON
+        this.app.use(express.json())
     }
 
     public listen() {
@@ -22,7 +35,7 @@ class Server extends DataBase {
     }
 
     routes():Array<express.Router>{
-        return [new LoginRouter().router, new RegisterRouter().router ]
+        return [new LoginRouter().router, new RegisterRouter().router, new ProductRouter().router, new ProviderRouter().router ]
     }
 
 }

@@ -16,7 +16,6 @@ class RegisterController {
     regUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log('hola');
                 // Obtenemos los datos del front
                 const data = req.body;
                 // Buscamos el usuario por DNI para no registrar uno que ya esta registrado
@@ -31,6 +30,7 @@ class RegisterController {
                 return res.status(201).json(newUser);
             }
             catch (error) {
+                // Si no puede hacer la consulta a la base de datos devolvemos un error con ese mismo msj
                 console.error("Error en la consulta de la base de datos:", error);
                 return res.status(500).json({ error: "Error en la consulta de la base de datos" });
             }

@@ -31,7 +31,7 @@ class LoginController {
                 if ((user) && (user.password === data.password) && (this.key !== '')) {
                     const payload = { check: true };
                     const token = jsonwebtoken_1.default.sign(payload, this.key);
-                    res.status(201).send({ token: token });
+                    res.status(201).send({ token: token, DNI: user.DNI });
                 }
                 else {
                     res.status(400).json({ Error: 'No se encontro el usuario registrado, registrelo primero' });

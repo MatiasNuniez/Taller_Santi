@@ -59,7 +59,8 @@ class usersModel {
             },
             DNI: {
                 type: String,
-                required: true
+                required: true,
+                unique: true
             },
             state: {
                 type: Boolean,
