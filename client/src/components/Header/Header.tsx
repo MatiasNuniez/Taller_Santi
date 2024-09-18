@@ -35,6 +35,9 @@ const Header: React.FC = () => {
           <Link to="/contacto" className="text-white hover:text-gray-300">
             Contacto
           </Link>
+          <Link to="/dashboard" className="block text-white hover:text-gray-300">
+              Dashboard
+          </Link>
         </nav>
 
         <button
@@ -75,6 +78,9 @@ const Header: React.FC = () => {
             </Link>
             <Link to="/contacto" className="block text-white hover:text-gray-300">
               Contacto
+            </Link>
+            <Link to="/dashboard" className="block text-white hover:text-gray-300">
+              Dashboard
             </Link>
           </nav>
         </div>

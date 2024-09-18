@@ -7,31 +7,46 @@ import { ProvidersInterface } from "../interfaces/providersInterface";
 export class ProviderController {
 
     // Agregar proveedores
-    public async addProvider(req: Request, res: Response) {
-        const { data, userDNI } = req.body
-        const user = await userModel.findOne({ DNI: userDNI })
-        if ((user) && (user.rol === 'admin') && (user.state === true)) {
-            const provider = await providerModel.findOne({ cuit: data.cuit })
-            if (provider) {
-                return res.status(400).json({ error: 'Ya existe el proveedor' })
-            }
-            try {
-                const newProvider: ProvidersInterface = {
-                    nombre: data.nombre,
-                    apellido: data.apellido,
-                    email: data.email,
-                    direccion: data.direccion,
-                    telefono: data.telefono,
-                    cuit: data.cuit
-                }
-                const addNewProvider = await providerModel.create(newProvider)
-                return res.status(200).json(addNewProvider)
-            } catch (error) {
-                return res.status(500).json({ error: 'Error al consultar la base de datos' })
-            }
-        }
-        return res.status(401).json({ error: 'No eres administrador' })
+public async addProvider(req: Request, res: Response) {
+    const { provider, userDNI } = req.body;
+
+    if (!provider || !userDNI) {
+        return res.status(400).json({ error: 'Datos incompletos' });
     }
+
+    try {
+        const user = await userModel.findOne({ DNI: userDNI });
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        if (user.rol !== 'admin' || !user.state) {
+            return res.status(401).json({ error: 'No eres administrador o el usuario no está activo' });
+        }
+
+        const providerBack = await providerModel.findOne({ cuit: provider.cuit });
+        if (providerBack) {
+            return res.status(400).json({ error: 'Ya existe el proveedor' });
+        }
+
+        const newProvider: ProvidersInterface = {
+            nombre: provider.nombre,
+            apellido: provider.apellido,
+            email: provider.email,
+            direccion: provider.direccion,
+            telefono: provider.telefono,
+            cuit: provider.cuit
+        };
+
+        const addNewProvider = await providerModel.create(newProvider);
+        const { nombre, apellido, email, direccion, telefono, cuit } = addNewProvider;
+        return res.status(200).json({ nombre, apellido, email, direccion, telefono, cuit });
+
+    } catch (error) {
+        return res.status(500).json({ error: 'Error al consultar la base de datos' });
+    }
+}
+
 
 
     // Editar proveedores

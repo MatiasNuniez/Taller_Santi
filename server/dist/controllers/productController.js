@@ -16,25 +16,43 @@ class ProductController {
     // Agregamos un nuevo producto
     addProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { data, userDNI } = req.body;
-            const user = yield usersModel_1.userModel.findOne({ DNI: userDNI });
-            if (user && user.rol === 'admin' && user.state === true) {
-                try {
+            try {
+                const { product, userDNI } = req.body;
+                console.log(product);
+                console.log(userDNI);
+                // Buscar el usuario en la base de datos
+                const user = yield usersModel_1.userModel.findOne({ DNI: userDNI });
+                // Verificar si el usuario existe
+                if (!user) {
+                    return res.status(404).json({ error: 'Usuario no encontrado' });
+                }
+                // Verificar si el usuario tiene rol de admin y su estado es activo
+                if (user.rol === 'admin' && user.state) {
+                    // Validar que los datos del producto sean correctos
+                    if (!product.nombre || !product.costo || !product.descripcion || !product.precio_u || !product.idProvider) {
+                        return res.status(400).json({ error: 'Datos del producto incompletos o inválidos' });
+                    }
+                    // Crear el nuevo producto
                     const newProduct = {
-                        nombre: data.nombre,
-                        costo: data.costo,
-                        descripcion: data.descripcion,
-                        precio_u: data.precio_u,
-                        idProvider: data.idProvider
+                        nombre: product.nombre,
+                        costo: product.costo,
+                        descripcion: product.descripcion,
+                        precio_u: product.precio_u,
+                        idProvider: product.idProvider
                     };
+                    // Guardar el nuevo producto en la base de datos
                     const addNewProduct = yield productsModel_1.productModel.create(newProduct);
+                    // Retornar el producto agregado como respuesta
                     return res.status(200).json(addNewProduct);
                 }
-                catch (error) {
-                    return res.status(500).json({ error: 'Error al consultar la base de datos' });
-                }
+                // Si el usuario no tiene permisos
+                return res.status(401).json({ error: 'No posee los permisos necesarios' });
             }
-            return res.status(401).json({ error: 'No posee los permisos necesarios' });
+            catch (error) {
+                // Manejar errores inesperados
+                console.error('Error al agregar el producto:', error);
+                return res.status(500).json({ error: 'Error al consultar la base de datos' });
+            }
         });
     }
     // Editar productos
