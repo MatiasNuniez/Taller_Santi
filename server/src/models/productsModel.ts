@@ -26,6 +26,17 @@ class ProductModel {
             idProvider: {
                 type: String,
                 require: true
+            },
+            categoria:{
+                type:String,
+                required:true
+            },
+            marca:{
+                type:String,
+                required:true
+            },
+            img:{
+                type:String
             }
         });
         this._model = mongoose.model('Products', productModel);

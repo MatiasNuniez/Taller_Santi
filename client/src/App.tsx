@@ -8,6 +8,7 @@ import Header from './components/Header/Header';
 import Dashboard from './components/Dashboard/Dashboard';
 import AddProduct from './components/Product/AddProduct';
 import AddProvider from './components/Provider/AddProvider';
+import Cart from './components/Cart/Cart'
 
 function App() {
   return (
@@ -26,9 +27,11 @@ function App() {
 
           <Route path='/dashboard' Component={Dashboard}/>
 
-          <Route path='/dashboard/agregar-producto' Component={AddProduct}/>
+          <Route path='/dashboard/add-product' Component={AddProduct}/>
 
-          <Route path='/dashboard/agregar-proveedor' Component={AddProvider}/>
+          <Route path='/dashboard/add-provider' Component={AddProvider}/>
+
+          <Route path='/cart' Component={Cart}/>
 
         </Routes>
   

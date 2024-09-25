@@ -4,6 +4,21 @@ export interface productInterface {
     costo: number;
     precio_u: number;
     idProvider: string;
+    categoria: string; 
+    marca:string;
+    img:string;
+}
+
+export interface productsInterface {
+    _id:string;
+    nombre: string;
+    descripcion: string;
+    costo: number;
+    precio_u: number;
+    idProvider: string;
+    categoria: string; 
+    marca:string;
+    img:string;
 }
 
 export interface ProvidersInterface {
@@ -13,4 +28,21 @@ export interface ProvidersInterface {
     telefono:string;
     email:string;
     direccion:string;
+}
+
+export interface categoryInterface {
+    _id:string;
+    nombre: string;
+    marca:string;
+    urlImg:string;
+}
+
+export interface ProviderInterface {
+    _id:string;
+    nombre:string;
+    apellido:string;
+    email:string;
+    direccion:string;
+    telefono:string;
+    cuit:string;
 }

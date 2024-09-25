@@ -10,6 +10,7 @@ class ProductRouter extends baseRouter_1.BaseRouter {
     }
     // Rutas para las peticiones de productos
     routes() {
+        this.router.get('/products/:userDNI', (req, res) => this.controller.getAllProducts(req, res));
         this.router.post('/newProduct', (req, res) => this.controller.addProduct(req, res));
         this.router.patch('/editProduct', (req, res) => this.controller.editProduct(req, res));
         this.router.delete('/deleteProduct/:productId', (req, res) => this.controller.deleteProduct(req, res));

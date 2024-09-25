@@ -13,38 +13,52 @@ exports.ProviderController = void 0;
 const usersModel_1 = require("../models/usersModel");
 const providersModel_1 = require("../models/providersModel");
 class ProviderController {
+    getAllProviders(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { userDNI } = req.params;
+            try {
+                const user = yield usersModel_1.userModel.find({ DNI: userDNI });
+                if (!user) {
+                    throw new Error('No existe el usuario');
+                }
+                const providers = yield providersModel_1.providerModel.find({});
+                return res.status(200).json(providers);
+            }
+            catch (error) {
+            }
+        });
+    }
     // Agregar proveedores
     addProvider(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { provider, userDNI } = req.body;
-            const user = yield usersModel_1.userModel.findOne({ DNI: userDNI });
-            if (!user) {
-                return res.status(404).json({ error: 'Usuario no encontrado' });
-            }
-            if ((user.rol === 'admin') && (user.state === true)) {
+            try {
+                const user = yield usersModel_1.userModel.findOne({ DNI: userDNI });
+                if (!user) {
+                    return res.status(404).json({ error: 'Usuario no encontrado' });
+                }
+                if (user.rol !== 'admin' || !user.state) {
+                    return res.status(401).json({ error: 'No eres administrador o el usuario no está activo' });
+                }
                 const providerBack = yield providersModel_1.providerModel.findOne({ cuit: provider.cuit });
                 if (providerBack) {
                     return res.status(400).json({ error: 'Ya existe el proveedor' });
                 }
-                else {
-                    try {
-                        const newProvider = {
-                            nombre: provider.nombre,
-                            apellido: provider.apellido,
-                            email: provider.email,
-                            direccion: provider.direccion,
-                            telefono: provider.telefono,
-                            cuit: provider.cuit
-                        };
-                        const addNewProvider = yield providersModel_1.providerModel.create(newProvider);
-                        return res.status(200).json(addNewProvider);
-                    }
-                    catch (error) {
-                        return res.status(500).json({ error: 'Error al consultar la base de datos' });
-                    }
-                }
+                const newProvider = {
+                    nombre: provider.nombre,
+                    apellido: provider.apellido,
+                    email: provider.email,
+                    direccion: provider.direccion,
+                    telefono: provider.telefono,
+                    cuit: provider.cuit
+                };
+                const addNewProvider = yield providersModel_1.providerModel.create(newProvider);
+                const { nombre, apellido, email, direccion, telefono, cuit } = addNewProvider;
+                return res.status(200).json({ nombre, apellido, email, direccion, telefono, cuit });
             }
-            return res.status(401).json({ error: 'No eres administrador' });
+            catch (error) {
+                return res.status(500).json({ error: 'Error al consultar la base de datos' });
+            }
         });
     }
     // Editar proveedores

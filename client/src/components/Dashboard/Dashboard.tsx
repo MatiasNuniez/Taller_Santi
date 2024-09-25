@@ -17,7 +17,7 @@ const Dashboard: React.FC = () => {
                         Añade nuevos productos al inventario con sus respectivos detalles.
                     </p>
                     <Link
-                        to="/dashboard/agregar-producto"
+                        to="/dashboard/add-product"
                         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
                     >
                         Agregar Producto
@@ -31,13 +31,26 @@ const Dashboard: React.FC = () => {
                         Registra nuevos proveedores para tener control sobre tus recursos.
                     </p>
                     <Link
-                        to="/dashboard/agregar-proveedor"
+                        to="/dashboard/add-provider"
                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
                     >
                         Agregar Proveedor
                     </Link>
                 </div>
 
+                {/* Card - Agregar categoria de productos */}
+                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <h2 className="text-xl font-bold mb-4">Agregar Categorias</h2>
+                    <p className="text-gray-600 mb-4">
+                        Registra nuevas categorias para los productos.
+                    </p>
+                    <Link
+                        to="/dashboard/add-category"
+                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+                    >
+                        Agregar Categoria
+                    </Link>
+                </div>
 
                 {/* Historial de ventas*/}
                 <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">

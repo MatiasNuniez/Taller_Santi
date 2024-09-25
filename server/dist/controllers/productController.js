@@ -13,6 +13,24 @@ exports.ProductController = void 0;
 const usersModel_1 = require("../models/usersModel");
 const productsModel_1 = require("../models/productsModel");
 class ProductController {
+    getAllProducts(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { userDNI } = req.params;
+            const user = yield usersModel_1.userModel.findOne({ DNI: userDNI });
+            if (!user) {
+                throw new Error('Usuario no encontrado');
+            }
+            if (user.rol === 'admin' && user.state) {
+                try {
+                    const data = yield productsModel_1.productModel.find({});
+                    res.status(200).json(data);
+                }
+                catch (error) {
+                    throw new Error('Error al obtener los productos');
+                }
+            }
+        });
+    }
     // Agregamos un nuevo producto
     addProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -38,7 +56,10 @@ class ProductController {
                         costo: product.costo,
                         descripcion: product.descripcion,
                         precio_u: product.precio_u,
-                        idProvider: product.idProvider
+                        idProvider: product.idProvider,
+                        categoria: product.categoria,
+                        img: product.urlImg,
+                        marca: product.marca
                     };
                     // Guardar el nuevo producto en la base de datos
                     const addNewProduct = yield productsModel_1.productModel.create(newProduct);

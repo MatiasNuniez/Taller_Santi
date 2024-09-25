@@ -6,46 +6,58 @@ import { ProvidersInterface } from "../interfaces/providersInterface";
 
 export class ProviderController {
 
+
+    public async getAllProviders(req: Request, res: Response) {
+        const { userDNI } = req.params;
+        try {
+            const user = await userModel.find({ DNI: userDNI })
+
+            if (!user) {
+                throw new Error('No existe el usuario')
+            }
+            const providers = await providerModel.find({})
+            return res.status(200).json(providers)
+        } catch (error) {
+
+        }
+    }
+
     // Agregar proveedores
-public async addProvider(req: Request, res: Response) {
-    const { provider, userDNI } = req.body;
+    public async addProvider(req: Request, res: Response) {
+        const { provider, userDNI } = req.body;
 
-    if (!provider || !userDNI) {
-        return res.status(400).json({ error: 'Datos incompletos' });
+        try {
+            const user = await userModel.findOne({ DNI: userDNI });
+            if (!user) {
+                return res.status(404).json({ error: 'Usuario no encontrado' });
+            }
+
+            if (user.rol !== 'admin' || !user.state) {
+                return res.status(401).json({ error: 'No eres administrador o el usuario no está activo' });
+            }
+
+            const providerBack = await providerModel.findOne({ cuit: provider.cuit });
+            if (providerBack) {
+                return res.status(400).json({ error: 'Ya existe el proveedor' });
+            }
+
+            const newProvider: ProvidersInterface = {
+                nombre: provider.nombre,
+                apellido: provider.apellido,
+                email: provider.email,
+                direccion: provider.direccion,
+                telefono: provider.telefono,
+                cuit: provider.cuit
+            };
+
+            const addNewProvider = await providerModel.create(newProvider);
+            const { nombre, apellido, email, direccion, telefono, cuit } = addNewProvider;
+            return res.status(200).json({ nombre, apellido, email, direccion, telefono, cuit });
+
+        } catch (error) {
+            return res.status(500).json({ error: 'Error al consultar la base de datos' });
+        }
     }
-
-    try {
-        const user = await userModel.findOne({ DNI: userDNI });
-        if (!user) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
-        }
-
-        if (user.rol !== 'admin' || !user.state) {
-            return res.status(401).json({ error: 'No eres administrador o el usuario no está activo' });
-        }
-
-        const providerBack = await providerModel.findOne({ cuit: provider.cuit });
-        if (providerBack) {
-            return res.status(400).json({ error: 'Ya existe el proveedor' });
-        }
-
-        const newProvider: ProvidersInterface = {
-            nombre: provider.nombre,
-            apellido: provider.apellido,
-            email: provider.email,
-            direccion: provider.direccion,
-            telefono: provider.telefono,
-            cuit: provider.cuit
-        };
-
-        const addNewProvider = await providerModel.create(newProvider);
-        const { nombre, apellido, email, direccion, telefono, cuit } = addNewProvider;
-        return res.status(200).json({ nombre, apellido, email, direccion, telefono, cuit });
-
-    } catch (error) {
-        return res.status(500).json({ error: 'Error al consultar la base de datos' });
-    }
-}
 
 
 
