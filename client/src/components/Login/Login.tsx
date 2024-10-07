@@ -54,7 +54,7 @@ const Login: React.FC = () => {
             <input
               id="DNI"
               type="text"
-              className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-tobacco"
               placeholder="Introduce tu DNI"
               value={DNI}
               onChange={(e) => setDNI(e.target.value)}
@@ -69,7 +69,7 @@ const Login: React.FC = () => {
             <input
               id="password"
               type="password"
-              className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-tobacco"
               placeholder="Introduce tu contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -80,14 +80,14 @@ const Login: React.FC = () => {
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+              className="w-full bg-tobacco text-white py-2 px-4 rounded-md transition-colors"
             >
               Iniciar Sesión
             </button>
           </div>
         </form>
         <p className="text-center text-gray-600 text-sm mt-4">
-          ¿No tienes una cuenta? <a href="#" className="text-blue-500 hover:underline">Regístrate</a>
+          ¿No tienes una cuenta? <a href="#" className="text-tobacco hover:underline">Regístrate</a>
         </p>
       </div> 
     </div>

@@ -13,9 +13,23 @@ class VentaModel {
                 default: Date.now()
             },
             idEmployeed: {
-                type: Number,
+                type: String,
                 required: true
-            }
+            },
+            productos: [{
+                idProducto: {
+                    type: String,
+                    required: true
+                },
+                cantidad: {
+                    type: Number,
+                    required: true
+                },
+                total:{
+                    type:Number,
+                    required:true
+                }
+            }]
         })
 
         this._model = mongoose.model('ventaModel', VentaModel)

@@ -11,6 +11,7 @@ const providerRouter_1 = require("./routes/providerRouter");
 const productRouter_1 = require("./routes/productRouter");
 const cors_1 = __importDefault(require("cors"));
 const categoryRouter_1 = require("./routes/categoryRouter");
+const ventasRouter_1 = require("./routes/ventasRouter");
 class Server extends db_1.DataBase {
     constructor() {
         super();
@@ -35,7 +36,7 @@ class Server extends db_1.DataBase {
         });
     }
     routes() {
-        return [new loginRouter_1.LoginRouter().router, new registerRouter_1.RegisterRouter().router, new productRouter_1.ProductRouter().router, new providerRouter_1.ProviderRouter().router, new categoryRouter_1.CategoryRouter().router];
+        return [new loginRouter_1.LoginRouter().router, new registerRouter_1.RegisterRouter().router, new productRouter_1.ProductRouter().router, new providerRouter_1.ProviderRouter().router, new categoryRouter_1.CategoryRouter().router, new ventasRouter_1.VentasRouter().router];
     }
 }
 new Server();

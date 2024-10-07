@@ -4,9 +4,10 @@ import { productsInterface } from '../../interfaces/Interfaces';
 const ShoppingCart: React.FC = () => {
   const [cart, setCart] = useState<Array<productsInterface>>([]);
 
-  // const removeFromCart = (id: number) => {
-  //   setCart(cart.filter((product) => product.id !== id));
-  // };
+  const removeFromCart = (id: string) => {
+    setCart(cart.filter((product) => product._id !== id));
+    localStorage.setItem('cart', JSON.stringify(cart))
+  };
 
   // const calculateTotal = () => {
   //   return cart.reduce((total, product) => total + product.price * product.quantity, 0);
@@ -72,7 +73,7 @@ const ShoppingCart: React.FC = () => {
                     </button>
                     {/* <span className="px-4">{product.quantity}</span> */}
                     <button
-                      // onClick={() => increaseQuantity(product.id)}
+                      // onClick={() => increaseQuantity(product._id)}
                       className="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-r"
                     >
                       +
@@ -82,7 +83,7 @@ const ShoppingCart: React.FC = () => {
                 <div>
                   {/* <p className="text-gray-700">Subtotal: ${product.price * product.quantity}</p> */}
                   <button
-                    // onClick={() => removeFromCart(product._id)}
+                    onClick={() => removeFromCart(product._id)}
                     className="mt-2 text-red-500 hover:underline"
                   >
                     Eliminar
@@ -93,7 +94,7 @@ const ShoppingCart: React.FC = () => {
           </ul>
           <div className="flex justify-between items-center mt-6">
             {/* <p className="text-lg font-bold">Total: ${calculateTotal()}</p> */}
-            <button className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <button className="px-6 py-2 bg-tobacco text-white rounded-lg hover:bg-tobacco">
               Proceder al pago
             </button>
           </div>

@@ -69,8 +69,8 @@ const Index: React.FC = () => {
               <h3 className="text-lg font-bold text-gray-800">{product.nombre}</h3>
               <p className="text-gray-600 text-sm">{product.descripcion}</p>
               <div className="mt-4 flex justify-between items-center">
-                <span className="text-xl font-bold text-blue-600">{product.precio_u}</span>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onClick={() => addToCart(product)}>
+                <span className="text-xl font-bold text-tobacco">${product.precio_u}</span>
+                <button className="bg-tobacco text-white px-4 py-2 rounded-md" onClick={() => addToCart(product)}>
                   Añadir
                 </button>
               </div>

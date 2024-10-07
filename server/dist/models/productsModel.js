@@ -17,6 +17,10 @@ class ProductModel {
                 required: true,
                 minlength: 10
             },
+            cantidad: {
+                type: Number,
+                required: true,
+            },
             costo: {
                 type: Number,
                 required: true

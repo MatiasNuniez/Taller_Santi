@@ -47,13 +47,14 @@ class ProductController {
                 // Verificar si el usuario tiene rol de admin y su estado es activo
                 if (user.rol === 'admin' && user.state) {
                     // Validar que los datos del producto sean correctos
-                    if (!product.nombre || !product.costo || !product.descripcion || !product.precio_u || !product.idProvider) {
+                    if (!product.nombre || !product.costo || !product.descripcion || !product.precio_u || !product.idProvider || !product.cantidad) {
                         return res.status(400).json({ error: 'Datos del producto incompletos o inválidos' });
                     }
                     // Crear el nuevo producto
                     const newProduct = {
                         nombre: product.nombre,
                         costo: product.costo,
+                        cantidad: product.cantidad,
                         descripcion: product.descripcion,
                         precio_u: product.precio_u,
                         idProvider: product.idProvider,

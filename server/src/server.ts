@@ -6,6 +6,7 @@ import { ProviderRouter} from './routes/providerRouter'
 import { ProductRouter } from './routes/productRouter'
 import cors from 'cors'
 import { CategoryRouter } from './routes/categoryRouter'
+import { VentasRouter } from './routes/ventasRouter'
 
 
 class Server extends DataBase {
@@ -36,7 +37,7 @@ class Server extends DataBase {
     }
 
     routes():Array<express.Router>{
-        return [new LoginRouter().router, new RegisterRouter().router, new ProductRouter().router, new ProviderRouter().router, new CategoryRouter().router ]
+        return [new LoginRouter().router, new RegisterRouter().router, new ProductRouter().router, new ProviderRouter().router, new CategoryRouter().router, new VentasRouter().router ]
     }
 
 }
