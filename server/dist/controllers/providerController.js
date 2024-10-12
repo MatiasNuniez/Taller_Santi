@@ -93,20 +93,20 @@ class ProviderController {
     deleteProvider(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             // Obtenemos los datos del front
-            const { userDNI } = req.body;
-            const { providerId } = req.params;
+            const { providerId, userDNI } = req.params;
             // Verificamos que se pase el id
             if (!providerId) {
                 return res.status(400).json({ message: 'Falta el id del elemento que se quiere eliminar' });
             }
             const user = yield usersModel_1.userModel.findOne({ DNI: userDNI });
-            if ((user) && (user.rol === 'admin') && (user.state === true)) {
+            if (user && user.rol === 'admin' && user.state === true) {
                 try {
                     // Buscamos el elemento a eliminar y verificamos que exista para poder eliminarlo
-                    const deletepProvider = yield providersModel_1.providerModel.findByIdAndUpdate(providerId);
+                    const deletepProvider = yield providersModel_1.providerModel.findByIdAndDelete(providerId);
                     if (!deletepProvider) {
                         return res.status(404).json({ message: 'Error al eliminar proveedor' });
                     }
+                    res.status(200).json({ message: 'Proveedor eliminado correctamente' });
                 }
                 catch (error) {
                     return res.status(500).json({ message: 'Error interno del servidor' });

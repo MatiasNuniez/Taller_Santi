@@ -10,8 +10,10 @@ class CategoryRouter extends baseRouter_1.BaseRouter {
     }
     // Rutas para las peticiones de login
     routes() {
+        this.router.patch('/category', (req, res) => this.controller.editCategory(req, res));
         this.router.post('/category', (req, res) => this.controller.addCategory(req, res));
         this.router.get('/category/:userDNI', (req, res) => this.controller.getAllCategories(req, res));
+        this.router.delete('/deleteCategory/:categoryId/:userDNI', (req, res) => this.controller.deleteCategory(req, res));
     }
 }
 exports.CategoryRouter = CategoryRouter;

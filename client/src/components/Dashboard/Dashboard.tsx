@@ -14,13 +14,13 @@ const Dashboard: React.FC = () => {
                 <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                     <h2 className="text-xl font-bold mb-4">Agregar Producto</h2>
                     <p className="text-gray-600 mb-4">
-                        Añade nuevos productos al inventario con sus respectivos detalles.
+                        Añade productos al inventario con sus respectivos detalles.
                     </p>
                     <Link
                         to="/dashboard/add-product"
                         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
                     >
-                        Agregar Producto
+                        Añadir Producto
                     </Link>
                 </div>
 
@@ -28,13 +28,13 @@ const Dashboard: React.FC = () => {
                 <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                     <h2 className="text-xl font-bold mb-4">Agregar Proveedor</h2>
                     <p className="text-gray-600 mb-4">
-                        Registra nuevos proveedores para tener control sobre tus recursos.
+                        Añade, edita o elimina proveedores en el inventario con sus respectivos detalles.
                     </p>
                     <Link
-                        to="/dashboard/add-provider"
+                        to="/dashboard/providers"
                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
                     >
-                        Agregar Proveedor
+                        Administrar Proveedor
                     </Link>
                 </div>
 
@@ -42,13 +42,13 @@ const Dashboard: React.FC = () => {
                 <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                     <h2 className="text-xl font-bold mb-4">Agregar Categorias</h2>
                     <p className="text-gray-600 mb-4">
-                        Registra nuevas categorias para los productos.
+                        Añade, edita o elimina categorias en el inventario con sus respectivos detalles.
                     </p>
                     <Link
-                        to="/dashboard/add-category"
+                        to="/dashboard/categories"
                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
                     >
-                        Agregar Categoria
+                        Administrar Categoria
                     </Link>
                 </div>
 
@@ -65,21 +65,6 @@ const Dashboard: React.FC = () => {
                         Historial de ventas
                     </Link>
                 </div>
-
-                {/* Card - Ver Estadísticas */}
-                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <h2 className="text-xl font-bold mb-4">Ver Estadísticas</h2>
-                    <p className="text-gray-600 mb-4">
-                        Consulta las estadísticas de ventas y rendimiento de la tienda.
-                    </p>
-                    <Link
-                        to="/admin/estadisticas"
-                        className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition-colors"
-                    >
-                        Ver Estadísticas
-                    </Link>
-                </div>
-
             </div>
         </div>
 

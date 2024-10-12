@@ -7,9 +7,10 @@ import ProductDetails from './components/ProductDetails/ProductDetails';
 import Header from './components/Header/Header';
 import Dashboard from './components/Dashboard/Dashboard';
 import AddProduct from './components/Product/AddProduct';
-import AddProvider from './components/Provider/AddProvider';
 import Cart from './components/Cart/Cart'
 import SalesHistory from './components/Ventas/SalesHistory';
+import ListaProveedores from './components/Provider/ProviderList';
+import ListaCategorias from './components/Category/ListCategory';
 
 function App() {
   return (
@@ -30,7 +31,9 @@ function App() {
 
           <Route path='/dashboard/add-product' Component={AddProduct}/>
 
-          <Route path='/dashboard/add-provider' Component={AddProvider}/>
+          <Route path='/dashboard/providers' Component={ListaProveedores}/>
+
+          <Route path='/dashboard/categories' Component={ListaCategorias}/>
 
           <Route path='/cart' Component={Cart}/>
 

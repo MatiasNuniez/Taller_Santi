@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { productsInterface } from "../../interfaces/Interfaces";
+import Modal from './Modal'; // Asegúrate de tener el modal en el mismo directorio o ajustar la ruta de importación.
 
 const Index: React.FC = () => {
-
-  const [products, setProducts] = useState<Array<productsInterface>>([])
-
-  const [cart, setCart] = useState([])
-
-  const [userDNI, setUserDNI] = useState('40790916')
-
+  const [products, setProducts] = useState<Array<productsInterface>>([]);
+  const [cart, setCart] = useState([]);
+  const [userDNI, setUserDNI] = useState('40790916');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<productsInterface | null>(null);
 
   const getProducts = async () => {
     try {
@@ -17,17 +16,17 @@ const Index: React.FC = () => {
         headers: {
           'Content-Type': 'application/json'
         }
-      })
+      });
 
       if (!res.ok) {
-        throw new Error('No se completo la peticion')
+        throw new Error('No se completó la petición');
       }
-      const data = await res.json()
-      setProducts(data)
+      const data = await res.json();
+      setProducts(data);
     } catch (error) {
-      alert('Error al consultar a la base de datos')
+      alert('Error al consultar a la base de datos');
     }
-  }
+  };
 
   const addToCart = (newProduct: productsInterface) => {
     const cartStored = localStorage.getItem('cart');
@@ -40,20 +39,39 @@ const Index: React.FC = () => {
 
     updatedCart.push(newProduct);
 
-
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
-  useEffect(() => {
-    getProducts()
-    localStorage.setItem('cart', '')
-  }, [userDNI])
+  const removeToDDBB = (id: string) => {
+    try {
+      setProducts(products.filter((product) => product._id !== id));
+    } catch (error) {
+      throw new Error('Error al eliminar elemento');
+    }
+  };
 
+  const handleEdit = (product: productsInterface) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true); // Abre el modal
+  };
+
+  const handleSave = (updatedProduct: any) => {
+    // Aquí puedes hacer una llamada a la API para actualizar el producto en la base de datos.
+    const updatedProducts = products.map((product) =>
+      product._id === updatedProduct._id ? updatedProduct : product
+    );
+    setProducts(updatedProducts);
+    setIsModalOpen(false); // Cierra el modal
+  };
+
+  useEffect(() => {
+    getProducts();
+    localStorage.setItem('cart', '');
+  }, [userDNI]);
 
   return (
     <div className="p-6">
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products?.map((product) => (
           <div
@@ -70,6 +88,15 @@ const Index: React.FC = () => {
               <p className="text-gray-600 text-sm">{product.descripcion}</p>
               <div className="mt-4 flex justify-between items-center">
                 <span className="text-xl font-bold text-tobacco">${product.precio_u}</span>
+                <button className="bg-red-700 text-white px-4 py-2 rounded-md" onClick={() => removeToDDBB(product._id)}>
+                  Eliminar
+                </button>
+                <button
+                  className="bg-yellow-500 text-white px-4 py-2 rounded-md"
+                  onClick={() => handleEdit(product)}
+                >
+                  Editar
+                </button>
                 <button className="bg-tobacco text-white px-4 py-2 rounded-md" onClick={() => addToCart(product)}>
                   Añadir
                 </button>
@@ -78,6 +105,15 @@ const Index: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {isModalOpen && selectedProduct && (
+        <Modal
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSave}
+          initialData={selectedProduct} // Pasamos el producto seleccionado al modal
+          userDNI={userDNI}
+        />
+      )}
     </div>
   );
 };

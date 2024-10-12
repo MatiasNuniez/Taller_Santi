@@ -97,22 +97,23 @@ export class ProviderController {
 
     public async deleteProvider(req: Request, res: Response) {
         // Obtenemos los datos del front
-        const { userDNI } = req.body
-        const { providerId } = req.params
-
+        const { providerId, userDNI } = req.params        
         // Verificamos que se pase el id
         if (!providerId) {
             return res.status(400).json({ message: 'Falta el id del elemento que se quiere eliminar' })
         }
 
         const user = await userModel.findOne({ DNI: userDNI })
-        if ((user) && (user.rol === 'admin') && (user.state === true)) {
+        if (user && user.rol === 'admin' && user.state === true) {            
             try {
                 // Buscamos el elemento a eliminar y verificamos que exista para poder eliminarlo
-                const deletepProvider = await providerModel.findByIdAndUpdate(providerId)
+                const deletepProvider = await providerModel.findByIdAndDelete(providerId)
                 if (!deletepProvider) {
                     return res.status(404).json({ message: 'Error al eliminar proveedor' })
                 }
+                
+                res.status(200).json({message:'Proveedor eliminado correctamente'})
+                
             } catch (error) {
                 return res.status(500).json({ message: 'Error interno del servidor' })
             }

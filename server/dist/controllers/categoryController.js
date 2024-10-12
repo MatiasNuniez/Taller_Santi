@@ -65,5 +65,57 @@ class CategoryController {
             }
         });
     }
+    editCategory(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { userDNI, data, idCategory } = req.body;
+            const user = yield usersModel_1.userModel.findOne({ DNI: userDNI });
+            const category = yield categoryModels_1.categoryModel.findOne({ _id: idCategory });
+            if (!user) {
+                return res.status(400).json({ msj: 'No existe el usuario' });
+            }
+            if (!category) {
+                return res.status(400).json({ msj: 'La categoria no existe' });
+            }
+            if ((user.rol === 'admin') && (user.state)) {
+                try {
+                    const updateCategory = yield categoryModels_1.categoryModel.findByIdAndUpdate(idCategory, data, { new: true });
+                    if (!updateCategory) {
+                        return res.status(404).json({ msj: 'Error al actualizar la categoria' });
+                    }
+                    return res.status(201).json(updateCategory);
+                }
+                catch (error) {
+                    return res.status(404).json({ msj: 'Error al actualizar categoria en la base de datos' });
+                }
+            }
+            else {
+                res.status(401).json({ msj: 'No posee los permisos necesarios' });
+            }
+        });
+    }
+    deleteCategory(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { categoryId, userDNI } = req.params;
+            if (!categoryId) {
+                return res.status(400).json({ message: 'Falta el id del elemento que se quiere eliminar' });
+            }
+            const user = yield usersModel_1.userModel.findOne({ DNI: userDNI });
+            if (user && user.rol === 'admin' && user.state === true) {
+                try {
+                    const deleteProduct = yield categoryModels_1.categoryModel.findByIdAndDelete(categoryId);
+                    if (!deleteProduct) {
+                        return res.status(404).json({ message: 'Categoria no encontrado' });
+                    }
+                    return res.status(200).json({ message: 'Categoria eliminada correctamente' });
+                }
+                catch (error) {
+                    return res.status(500).json({ message: 'Error interno del servidor', error });
+                }
+            }
+            else {
+                return res.status(401).json({ message: 'No posee los permisos necesarios' });
+            }
+        });
+    }
 }
 exports.CategoryController = CategoryController;
