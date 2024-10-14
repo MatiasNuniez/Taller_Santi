@@ -43,9 +43,14 @@ const Index: React.FC = () => {
     localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
-  const removeToDDBB = (id: string) => {
+  const removeToDDBB = async (id: string) => {
     try {
-      setProducts(products.filter((product) => product._id !== id));
+      const deleteProduct = await fetch(`http://localhost:3000/api/deleteProduct/${id}/${userDNI}`,{
+        method:'DELETE'
+      })
+      if(deleteProduct.ok){
+        setProducts(products.filter((product) => product._id !== id));
+      }
     } catch (error) {
       throw new Error('Error al eliminar elemento');
     }

@@ -105,8 +105,7 @@ class ProductController {
     // Eliminar producto
     deleteProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { userDNI } = req.body;
-            const { productId } = req.params;
+            const { productId, userDNI } = req.params;
             if (!productId) {
                 return res.status(400).json({ message: 'Falta el id del elemento que se quiere eliminar' });
             }

@@ -1,0 +1,2 @@
+-Promocion en porcentaje en carrito
+-Cambiar el precio unitario de una misma categoria

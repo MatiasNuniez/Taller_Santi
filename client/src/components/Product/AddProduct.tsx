@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { productInterface } from '../../interfaces/Interfaces'
 import { categoryInterface } from '../../interfaces/Interfaces';
 import { ProviderInterface } from '../../interfaces/Interfaces';
+import { prettyDOM } from '@testing-library/react';
 
 const AddProduct: React.FC = () => {
     // Estado para el producto
@@ -13,7 +14,8 @@ const AddProduct: React.FC = () => {
         precio_u: 0,
         categoria: '',
         img: '',
-        marca: ''
+        marca: '',
+        cantidad:0
     });
 
     const [indexMarca, setIndexMarca] = useState<Number>(0)
@@ -61,7 +63,9 @@ const AddProduct: React.FC = () => {
         e.preventDefault();
 
         // Verifica si todos los campos requeridos están completos
-        if (!product.costo || !product.descripcion || !idProvider || !product.nombre || !product.precio_u) {
+        console.log(product);
+        
+        if (!product.costo || !product.descripcion || !product.nombre || !product.precio_u || !product.cantidad) {
             alert('Complete todos los campos');
             return; // Evita continuar con el registro si faltan campos
         }
@@ -74,7 +78,7 @@ const AddProduct: React.FC = () => {
                     urlImg: categories[Number(indexCategoria)].urlImg,
                     categoria: categories[Number(indexCategoria)].nombre,
                     marca: categories[Number(indexCategoria)].marca,
-                    idProvider: idProvider
+                    idProvider: idProvider,
                 };
 
                 const res = await fetch('http://localhost:3000/api/newProduct', {
@@ -178,6 +182,23 @@ const AddProduct: React.FC = () => {
                             className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Introduce el costo del producto"
                             value={product.costo}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+
+
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cantidad">
+                            Cantidad
+                        </label>
+                        <input
+                            id="cantidad"
+                            name="cantidad"
+                            type="number"
+                            className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Introduce el costo del producto"
+                            value={product.cantidad}
                             onChange={handleInputChange}
                             required
                         />
