@@ -29,7 +29,7 @@ class LoginController {
                 const user = yield usersModel_1.userModel.findOne({ DNI: data.DNI });
                 // Verificamos que exista el usuario, coincida la password y que la secret key exista
                 if ((user) && (user.password === data.password) && (this.key !== '')) {
-                    const payload = { check: true };
+                    const payload = { id: user._id, check: true };
                     const token = jsonwebtoken_1.default.sign(payload, this.key);
                     res.status(201).send({ token: token, DNI: user.DNI });
                 }

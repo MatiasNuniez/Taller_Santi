@@ -44,74 +44,88 @@ const ListaCategorias: React.FC = () => {
         setCategorias(data);
       }
     } catch (error) {
-      console.error('Error al hace la peticion a la base de datos')
+      console.error('Error al hace la peticion a la base de datos en categoria')
     }
   }
 
-  // Función para guardar la categoría (agregar o editar)
-  const guardarCategoria = async () => {
-    if (categoriaActual) {
-      if (categoriaActual._id) {
-        // Editar categoría existente
-        try {
-          console.log(categoriaActual);
+// Función para actualizar localStorage
+const actualizarLocalStorageCategorias = (categoriasActualizadas: Array<Categoria>) => {
+  localStorage.setItem('categorias', JSON.stringify(categoriasActualizadas));
+}
 
-          const response = await fetch(`http://localhost:3000/api/category`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userDNI, data: categoriaActual, idCategory: categoriaActual._id })
-          });
+const guardarCategoria = async () => {
+  if (categoriaActual) {
+    if (categoriaActual._id) {
+      // Editar categoría existente
+      try {
+        const response = await fetch(`http://localhost:3000/api/category`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userDNI, data: categoriaActual, idCategory: categoriaActual._id })
+        });
 
-          if (response.ok) {
-            const categoriaEditada = await response.json();
-            console.log(categoriaEditada);
-            setCategorias(categorias.map((c) => (c._id === categoriaEditada._id ? categoriaEditada : c)));
-            setCategoriaActual({_id:'', marca:'', nombre:'',urlImg:''})
-            cerrarModal();
-          }
-        } catch (error) {
-          console.error("Error al editar la categoría:", error);
+        if (response.ok) {
+          const categoriaEditada = await response.json();
+          const categoriasActualizadas = categorias.map((c) => (c._id === categoriaEditada._id ? categoriaEditada : c));
+          setCategorias(categoriasActualizadas);
+          actualizarLocalStorageCategorias(categoriasActualizadas);
+          setCategoriaActual({ _id: '', marca: '', nombre: '', urlImg: '' });
+          cerrarModal();
         }
-      } else {
-        // Agregar nueva categoría
-        try {
-          const response = await fetch('http://localhost:3000/api/category', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({userDNI, nombre: categoriaActual.nombre, marca: categoriaActual.marca, urlImg: categoriaActual.urlImg}),
-          });
+      } catch (error) {
+        console.error("Error al editar la categoría:", error);
+      }
+    } else {
+      // Agregar nueva categoría
+      try {
+        const response = await fetch('http://localhost:3000/api/category', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userDNI, nombre: categoriaActual.nombre, marca: categoriaActual.marca, urlImg: categoriaActual.urlImg }),
+        });
 
-          if (response.ok) {
-            const nuevaCategoria = await response.json();
-            setCategorias([...categorias, nuevaCategoria]);
-            setCategoriaActual({_id:'', marca:'', nombre:'',urlImg:''})
-            cerrarModal();
+        if (response.ok) {
+          let nuevaCategoria = await response.json();
+
+          // Si la API devuelve el objeto bajo una clave extra, como "Nueva_categoria", extrae solo el objeto necesario
+          if (nuevaCategoria.Nueva_categoria) {
+            nuevaCategoria = nuevaCategoria.Nueva_categoria;
           }
-        } catch (error) {
-          console.error("Error al agregar la categoría:", error);
+
+          const categoriasActualizadas = [...categorias, nuevaCategoria];
+          setCategorias(categoriasActualizadas);
+          actualizarLocalStorageCategorias(categoriasActualizadas);
+          setCategoriaActual({ _id: '', marca: '', nombre: '', urlImg: '' });
+          cerrarModal();
         }
+      } catch (error) {
+        console.error("Error al agregar la categoría:", error);
       }
     }
-  };
+  }
+};
 
-  // Función para eliminar una categoría por ID
-  const eliminarCategoria = async (id: string) => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/deleteCategory/${id}/${userDNI}`, {
-        method: 'DELETE',
-      });
+// Función para eliminar una categoría por ID
+const eliminarCategoria = async (id: string) => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/deleteCategory/${id}/${userDNI}`, {
+      method: 'DELETE',
+    });
 
-      if (response.ok) {
-        setCategorias(categorias.filter((categoria) => categoria._id !== id));
-      }
-    } catch (error) {
-      console.error("Error al eliminar la categoría:", error);
+    if (response.ok) {
+      const categoriasActualizadas = categorias.filter((categoria) => categoria._id !== id);
+      setCategorias(categoriasActualizadas);
+      actualizarLocalStorageCategorias(categoriasActualizadas);
     }
-  };
+  } catch (error) {
+    console.error("Error al eliminar la categoría:", error);
+  }
+};
+
 
   useEffect(() => {
     getAllCategories();

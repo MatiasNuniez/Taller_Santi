@@ -11,37 +11,37 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
-
-    if (nombre === '' || apellido === '' || telefono === '' || direccion === '' || DNI === '' || password === '') {
-      alert('complete todos los campos')
-    } else {
-      try {
-        console.log(DNI, password);
-        const res = await fetch('http://localhost:3000/api/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ nombre, apellido, telefono, direccion, DNI, password })
-        });
-
-        if (!res.ok) {
-          throw new Error('Error en la respuesta del servidor');
-        }else{
-          const data = await res.json();
-          alert('Usuario registrado correctamente, inicie sesion.')
-          setTimeout(() => {
-            navigate('/login')
-          }, 1500);
-          
-        }
-        
-      } catch (error) {
-        console.error('Error al consultar a la base de datos', error);
-        alert('Error al consultar a la base de datos');
-      }
+    e.preventDefault();
+  
+    if (!nombre || !apellido || !telefono || !direccion || !DNI || !password) {
+      alert('Complete todos los campos');
+      return;
     }
-
+  
+    try {
+      console.log(DNI, password);
+      const res = await fetch('http://localhost:3000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ nombre, apellido, telefono, direccion, DNI, password })
+      });
+  
+      if (!res.ok) {
+        throw new Error('Error en la respuesta del servidor');
+      }
+  
+      const data = await res.json();
+      alert('Usuario registrado correctamente, inicie sesión.');
+  
+      setTimeout(() => {
+        navigate('/login');
+      }, 1000);
+  
+    } catch (error) {
+      alert('Error al consultar a la base de datos para registrar: ' + error);
+    }
   };
 
   useEffect(() => {

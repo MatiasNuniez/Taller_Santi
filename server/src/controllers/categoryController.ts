@@ -2,13 +2,14 @@ import { Request, Response } from "express";
 import { userModel } from "../models/usersModel";
 import { categoryModel } from "../models/categoryModels";
 import { categoryInterface } from "../interfaces/categoryInterface";
+import jwt from "jsonwebtoken";
 
 export class CategoryController {
 
     public async getAllCategories(req: Request, res: Response) {
-
-        const { userDNI } = req.params
-        const user = await userModel.findOne({ DNI: userDNI })
+        const {userDNI} = req.params
+        
+        const user = await userModel.findOne({DNI: userDNI })
 
         if (!user) {
             return res.status(400).json({ msj: 'El usuario no existe' })

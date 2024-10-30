@@ -20,6 +20,7 @@ export interface productsInterface {
     categoria: string; 
     marca:string;
     img:string;
+    cantidad:number;
 }
 
 export interface ProvidersInterface {

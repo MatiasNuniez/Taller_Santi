@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { productInterface } from '../../interfaces/Interfaces'
 import { categoryInterface } from '../../interfaces/Interfaces';
 import { ProviderInterface } from '../../interfaces/Interfaces';
-import { prettyDOM } from '@testing-library/react';
 
 const AddProduct: React.FC = () => {
     // Estado para el producto
@@ -15,7 +14,7 @@ const AddProduct: React.FC = () => {
         categoria: '',
         img: '',
         marca: '',
-        cantidad:0
+        cantidad: 0
     });
 
     const [indexMarca, setIndexMarca] = useState<Number>(0)
@@ -24,7 +23,7 @@ const AddProduct: React.FC = () => {
 
     const [categories, setCategories] = useState<Array<categoryInterface>>([])
 
-    const [idProvider, setIdProvider] = useState<String>('')
+    const [idProviderState, setIdProvider] = useState<String>('')
 
     const [providers, setProviders] = useState<Array<ProviderInterface>>([])
 
@@ -62,24 +61,22 @@ const AddProduct: React.FC = () => {
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Verifica si todos los campos requeridos están completos
-        console.log(product);
-        
-        if (!product.costo || !product.descripcion || !product.nombre || !product.precio_u || !product.cantidad) {
+        if (!product.costo || !product.descripcion || !product.nombre || !product.precio_u || !product.cantidad || !idProviderState) {
             alert('Complete todos los campos');
-            return; // Evita continuar con el registro si faltan campos
+            return;
         }
 
-        // Compara los índices de categoría y marca
         if (Number(indexCategoria) === Number(indexMarca)) {
             try {
                 const productComplete = {
                     ...product,
-                    urlImg: categories[Number(indexCategoria)].urlImg,
-                    categoria: categories[Number(indexCategoria)].nombre,
-                    marca: categories[Number(indexCategoria)].marca,
-                    idProvider: idProvider,
+                    img: categories[Number(indexCategoria)]?.urlImg || '', // Asegura que urlImg esté disponible
+                    categoria: categories[Number(indexCategoria)]?.nombre || '',
+                    marca: categories[Number(indexCategoria)]?.marca || '',
+                    idProvider: idProviderState,
                 };
+
+                console.log('Producto completo antes de enviar:', productComplete); // Verifica que los datos estén correctos
 
                 const res = await fetch('http://localhost:3000/api/newProduct', {
                     method: 'POST',
@@ -88,8 +85,11 @@ const AddProduct: React.FC = () => {
                     },
                     body: JSON.stringify({ product: productComplete, userDNI })
                 });
-                const data = await res.json();
-                alert('Producto registrado con éxito');
+                if(!res.ok){
+                    alert('Error al registar el producto en la base de datos')
+                }else{
+                    alert('Producto registrado con éxito');
+                }                
             } catch (error) {
                 alert('Error al registrar el producto');
             }
@@ -98,21 +98,35 @@ const AddProduct: React.FC = () => {
         }
     };
 
-    const handleChangeCategoria = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const index = e.target.selectedIndex;
-        setIndexCategoria(index)
-    }
-
-    const handleChangeMarca = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const index = e.target.selectedIndex;
-        setIndexMarca(index)
-    }
-
     const handleChangeProviders = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const id = e.target.value
-        setIdProvider(id)
-    }
-
+        const id = e.target.value;
+        console.log(id);
+        
+        if (id) {
+            setIdProvider(id);
+            
+        } else {
+            alert("Seleccione un proveedor válido");
+        }
+    };
+    
+    const handleChangeCategoria = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const index = e.target.selectedIndex - 1; // Ajusta el índice ya que el primer valor es "Seleccione una categoría"
+        if (index >= 0) {
+            setIndexCategoria(index);
+        } else {
+            alert("Seleccione una categoría válida");
+        }
+    };
+    
+    const handleChangeMarca = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const index = e.target.selectedIndex - 1; // Ajusta el índice por la opción por defecto
+        if (index >= 0) {
+            setIndexMarca(index);
+        } else {
+            alert("Seleccione una marca válida");
+        }
+    };
     useEffect(() => {
         getCategoriesFromLocalStorage()
         getProvidersFromLocalStorage()
@@ -210,21 +224,11 @@ const AddProduct: React.FC = () => {
                         </label>
 
                         <select className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" name="idProvider" id="idProvider" onChange={handleChangeProviders}>
+                            <option value="">Seleccione un proveedor</option>
                             {providers.map((item, index) => (
                                 <option key={index} value={item._id}> {item.nombre} </option>
                             ))}
                         </select>
-
-                        {/* <input
-                            id="idProvider"
-                            name="idProvider"
-                            type="text"
-                            className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Introduce el ID del proveedor"
-                            value={product.idProvider}
-                            onChange={handleInputChange}
-                            required
-                        /> */}
                     </div>
 
                     <div className="mb-4">
@@ -232,6 +236,7 @@ const AddProduct: React.FC = () => {
                             Categoria
                         </label>
                         <select className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" name="categoria" id="categoria" onChange={handleChangeCategoria}>
+                            <option value="">Seleccione una categoria</option>
                             {categories.map((item, index) => (
                                 <option key={index}> {item.nombre} </option>
                             ))}
@@ -243,6 +248,7 @@ const AddProduct: React.FC = () => {
                             Marca
                         </label>
                         <select className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" name="marca" id="marca" onChange={handleChangeMarca}>
+                            <option value="">Seleccione una marca</option>
                             {categories.map((item, index) => (
                                 <option key={index}> {item.marca} </option>
                             ))}

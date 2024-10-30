@@ -53,9 +53,17 @@ const Header: React.FC = () => {
   }
 
   useEffect(() => {
-    getCategories()
-    getProviders()
-  }, [userDNI])
+    if (location.pathname.toLowerCase() !== "/login" && location.pathname.toLowerCase() !== "/register") {
+        // Verifica si las categorías y los proveedores ya están en localStorage
+        const categoriesStored = localStorage.getItem('categorias');
+        const providersStored = localStorage.getItem('proveedores');
+        
+        // Si no están en localStorage, hace la petición
+        if (!categoriesStored) getCategories();
+        if (!providersStored) getProviders();
+    }
+}, [location.pathname]);
+
 
 
   return (
@@ -73,9 +81,6 @@ const Header: React.FC = () => {
       <nav className="hidden md:flex space-x-6">
         <Link to="/" className="text-[#8B4513] font-bold hover:text-white transition-colors">
           Inicio
-        </Link>
-        <Link to="/productos" className="text-[#8B4513] font-bold hover:text-white transition-colors">
-          Productos
         </Link>
         <Link to="/cart" className="text-[#8B4513] font-bold hover:text-white transition-colors">
           Carrito
@@ -113,9 +118,6 @@ const Header: React.FC = () => {
         <nav className="px-4 py-4 space-y-2">
           <Link to="/" className="block text-white hover:text-gray-300">
             Inicio
-          </Link>
-          <Link to="/productos" className="block text-white hover:text-gray-300">
-            Productos
           </Link>
           <Link to="/cart" className="block text-white hover:text-gray-300">
             Carrito

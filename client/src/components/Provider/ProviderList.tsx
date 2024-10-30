@@ -49,73 +49,82 @@ const ListaProveedores: React.FC = () => {
   };
 
   // Función para manejar el cambio en los campos del formulario
-  const manejarCambio = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (proveedorActual) {
-      setProveedorActual({ ...proveedorActual, [e.target.name]: e.target.value });
-    }
-  };
+const manejarCambio = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (proveedorActual) {
+    setProveedorActual({ ...proveedorActual, [e.target.name]: e.target.value });
+  }
+};
 
-  // Función para guardar el proveedor (agregar o editar)
-  const guardarProveedor = async () => {
-    if (proveedorActual) {
-      if (proveedorActual._id) {
-        // Editar proveedor existente
-        try {
-          const response = await fetch(`http://localhost:3000/api/editProvider`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userDNI, data: proveedorActual, idProvider: proveedorActual._id }),
-          });
+// Función para guardar el proveedor (agregar o editar) y actualizar en localStorage
+const guardarProveedor = async () => {
+  if (proveedorActual) {
+    if (proveedorActual._id) {
+      // Editar proveedor existente
+      try {
+        const response = await fetch(`http://localhost:3000/api/editProvider`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userDNI, data: proveedorActual, idProvider: proveedorActual._id }),
+        });
 
-          if (response.ok) {
-            const proveedorEditado = await response.json();
-            setProveedores(proveedores.map((p) => (p._id === proveedorEditado._id ? proveedorEditado : p)));
-            setProveedorActual({_id:'', apellido:'',cuit:'',direccion:'',email:'',nombre:'',telefono:''})
-            cerrarModal();
-          }
-        } catch (error) {
-          console.error("Error al editar el proveedor:", error);
+        if (response.ok) {
+          const proveedorEditado = await response.json();
+          const nuevosProveedores = proveedores.map((p) =>
+            p._id === proveedorEditado._id ? proveedorEditado : p
+          );
+          setProveedores(nuevosProveedores);
+          localStorage.setItem('proveedores', JSON.stringify(nuevosProveedores));
+          setProveedorActual({ _id: '', apellido: '', cuit: '', direccion: '', email: '', nombre: '', telefono: '' });
+          cerrarModal();
         }
-      } else {
-        // Agregar nuevo proveedor
-        try {
-          const response = await fetch('http://localhost:3000/api/newProvider', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({userDNI, provider: proveedorActual}),
-          });
+      } catch (error) {
+        console.error("Error al editar el proveedor:", error);
+      }
+    } else {
+      // Agregar nuevo proveedor
+      try {
+        const response = await fetch('http://localhost:3000/api/newProvider', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userDNI, provider: proveedorActual }),
+        });
 
-          if (response.ok) {
-            const nuevoProveedor = await response.json();
-            setProveedores([...proveedores, nuevoProveedor]);
-            setProveedorActual({_id:'', apellido:'',cuit:'',direccion:'',email:'',nombre:'',telefono:''})
-            cerrarModal();
-          }
-        } catch (error) {
-          console.error("Error al agregar el proveedor:", error);
+        if (response.ok) {
+          const nuevoProveedor = await response.json();
+          const nuevosProveedores = [...proveedores, nuevoProveedor];
+          setProveedores(nuevosProveedores);
+          localStorage.setItem('proveedores', JSON.stringify(nuevosProveedores));
+          setProveedorActual({ _id: '', apellido: '', cuit: '', direccion: '', email: '', nombre: '', telefono: '' });
+          cerrarModal();
         }
+      } catch (error) {
+        console.error("Error al agregar el proveedor:", error);
       }
     }
-  };
+  }
+};
 
-  // Función para eliminar un proveedor por ID
-  const eliminarProveedor = async (id: string) => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/deleteProvider/${id}/${userDNI}`, {
-        method: 'DELETE',
-      });
+// Función para eliminar un proveedor por ID y actualizar en localStorage
+const eliminarProveedor = async (id: string) => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/deleteProvider/${id}/${userDNI}`, {
+      method: 'DELETE',
+    });
 
-      if (response.ok) {
-        setProveedores(proveedores.filter((proveedor) => proveedor._id !== id));
-      }
-    } catch (error) {
-      console.error("Error al eliminar el proveedor:", error);
+    if (response.ok) {
+      const nuevosProveedores = proveedores.filter((proveedor) => proveedor._id !== id);
+      setProveedores(nuevosProveedores);
+      localStorage.setItem('proveedores', JSON.stringify(nuevosProveedores));
     }
-  };
+  } catch (error) {
+    console.error("Error al eliminar el proveedor:", error);
+  }
+};
+
 
   useEffect(() => {
     getAllProviders();
