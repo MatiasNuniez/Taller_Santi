@@ -17,14 +17,17 @@ const ListaProveedores: React.FC = () => {
   // Estados para controlar el modal
   const [modalAbierto, setModalAbierto] = useState(false);
   const [proveedorActual, setProveedorActual] = useState<Proveedor>({ apellido: '', cuit: '', direccion: '', email: '', _id: '', nombre: '', telefono: '' });
-  const [userDNI, setuserDNI] = useState<string>('40790916')
+  const [token, setToken] = useState<string>('')
 
 
   // Funcion para obtener todos los proveedores
   const getAllProviders = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/providers/${userDNI}`, {
-        method: 'GET'
+      const res = await fetch(`http://localhost:3000/api/providers`, {
+        method: 'GET',
+        headers:{
+          'Authorization': `Bearer ${token}`
+        }
       });
       if (res.ok) {
         const data = await res.json();
@@ -65,8 +68,9 @@ const guardarProveedor = async () => {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ userDNI, data: proveedorActual, idProvider: proveedorActual._id }),
+          body: JSON.stringify({data: proveedorActual, idProvider: proveedorActual._id }),
         });
 
         if (response.ok) {
@@ -89,8 +93,9 @@ const guardarProveedor = async () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ userDNI, provider: proveedorActual }),
+          body: JSON.stringify({provider: proveedorActual }),
         });
 
         if (response.ok) {
@@ -111,8 +116,11 @@ const guardarProveedor = async () => {
 // Función para eliminar un proveedor por ID y actualizar en localStorage
 const eliminarProveedor = async (id: string) => {
   try {
-    const response = await fetch(`http://localhost:3000/api/deleteProvider/${id}/${userDNI}`, {
+    const response = await fetch(`http://localhost:3000/api/deleteProvider/${id}`, {
       method: 'DELETE',
+      headers:{
+        'Authorization': `Bearer ${token}`,
+      }
     });
 
     if (response.ok) {
@@ -125,10 +133,13 @@ const eliminarProveedor = async (id: string) => {
   }
 };
 
-
   useEffect(() => {
+    let token = localStorage.getItem('sesiontoken')
+    if (token) {
+      setToken(token)
+    }
     getAllProviders();
-  }, [userDNI])
+  }, [token])
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">

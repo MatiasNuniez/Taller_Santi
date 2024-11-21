@@ -19,7 +19,6 @@ const Register: React.FC = () => {
     }
   
     try {
-      console.log(DNI, password);
       const res = await fetch('http://localhost:3000/api/register', {
         method: 'POST',
         headers: {
@@ -28,11 +27,14 @@ const Register: React.FC = () => {
         body: JSON.stringify({ nombre, apellido, telefono, direccion, DNI, password })
       });
   
+      const data = await res.json();
+  
       if (!res.ok) {
-        throw new Error('Error en la respuesta del servidor');
+        console.error('Error del servidor:', data.Error || 'Error desconocido');
+        alert(data.Error || 'Ocurrió un error al registrar el usuario.');
+        return;
       }
   
-      const data = await res.json();
       alert('Usuario registrado correctamente, inicie sesión.');
   
       setTimeout(() => {
@@ -40,9 +42,11 @@ const Register: React.FC = () => {
       }, 1000);
   
     } catch (error) {
-      alert('Error al consultar a la base de datos para registrar: ' + error);
+      console.error('Error en el cliente:', error);
+      alert('Error al consultar a la base de datos para registrar');
     }
   };
+  
 
   useEffect(() => {
     const storedToken = localStorage.getItem('sesiontoken')
@@ -150,14 +154,14 @@ const Register: React.FC = () => {
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+              className="w-full bg-tobacco text-white py-2 px-4 rounded-md transition-colors"
             >
               Registrarse
             </button>
           </div>
         </form>
         <p className="text-center text-gray-600 text-sm mt-4">
-          ¿Ya tienes una cuenta? <a href="#" className="text-blue-500 hover:underline">Inicia sesión</a>
+          ¿Ya tienes una cuenta? <a href="/login" className="text-blue-500 hover:underline">Inicia sesión</a>
         </p>
       </div>
     </div>

@@ -10,11 +10,9 @@ interface Categoria {
 
 const ListaCategorias: React.FC = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
-
-  const [userDNI, setuserDNI] = useState<string>('40790916')
-
   const [modalAbierto, setModalAbierto] = useState(false);
   const [categoriaActual, setCategoriaActual] = useState<Categoria>({_id:'', marca:'',nombre:'',urlImg:''});
+  const [token, setToken] = useState<string>('')
 
   const abrirModal = (categoria?: Categoria) => {
     if (categoria) {
@@ -36,8 +34,11 @@ const ListaCategorias: React.FC = () => {
   // Función para obtener todas las categorías
   const getAllCategories = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/category/${userDNI}`, {
-        method: 'GET'
+      const res = await fetch(`http://localhost:3000/api/category`, {
+        method: 'GET',
+        headers:{
+          'Authorization': `Bearer ${token}`
+        }
       });
       if (res.ok) {
         const data = await res.json();
@@ -56,14 +57,14 @@ const actualizarLocalStorageCategorias = (categoriasActualizadas: Array<Categori
 const guardarCategoria = async () => {
   if (categoriaActual) {
     if (categoriaActual._id) {
-      // Editar categoría existente
       try {
         const response = await fetch(`http://localhost:3000/api/category`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ userDNI, data: categoriaActual, idCategory: categoriaActual._id })
+          body: JSON.stringify({ data: categoriaActual, idCategory: categoriaActual._id })
         });
 
         if (response.ok) {
@@ -84,8 +85,9 @@ const guardarCategoria = async () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ userDNI, nombre: categoriaActual.nombre, marca: categoriaActual.marca, urlImg: categoriaActual.urlImg }),
+          body: JSON.stringify({ nombre: categoriaActual.nombre, marca: categoriaActual.marca, urlImg: categoriaActual.urlImg }),
         });
 
         if (response.ok) {
@@ -112,8 +114,11 @@ const guardarCategoria = async () => {
 // Función para eliminar una categoría por ID
 const eliminarCategoria = async (id: string) => {
   try {
-    const response = await fetch(`http://localhost:3000/api/deleteCategory/${id}/${userDNI}`, {
+    const response = await fetch(`http://localhost:3000/api/deleteCategory/${id}`, {
       method: 'DELETE',
+      headers:{
+        'Authorization': `Bearer ${token}`
+      }
     });
 
     if (response.ok) {
@@ -128,8 +133,12 @@ const eliminarCategoria = async (id: string) => {
 
 
   useEffect(() => {
+    let token = localStorage.getItem('sesiontoken')
+    if (token) {
+      setToken(token)
+    }
     getAllCategories();
-  }, [userDNI])
+  }, [])
 
 
   return (

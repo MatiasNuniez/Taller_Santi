@@ -7,6 +7,7 @@ import { ProductRouter } from './routes/productRouter'
 import cors from 'cors'
 import { CategoryRouter } from './routes/categoryRouter'
 import { VentasRouter } from './routes/ventasRouter'
+import { CartRouter } from './routes/cartRouter'
 
 
 class Server extends DataBase {
@@ -22,9 +23,9 @@ class Server extends DataBase {
     }
 
     public config() {
-        // Aplica CORS
         this.app.use(cors({
-            origin: '*',   // Cambiar '*' a una URL específica si necesitas habilitar credenciales
+            origin: 'http://localhost:3001', // Cambia al dominio de tu cliente
+            methods: 'GET,POST,PUT,PATCH,DELETE',   // Cambiar '*' a una URL específica si necesitas habilitar credenciales
         }))
         // Asegúrate de que express pueda parsear JSON
         this.app.use(express.json())
@@ -37,7 +38,7 @@ class Server extends DataBase {
     }
 
     routes():Array<express.Router>{
-        return [new LoginRouter().router, new RegisterRouter().router, new ProductRouter().router, new ProviderRouter().router, new CategoryRouter().router, new VentasRouter().router ]
+        return [new LoginRouter().router, new RegisterRouter().router, new ProductRouter().router, new ProviderRouter().router, new CategoryRouter().router, new VentasRouter().router, new CartRouter().router]
     }
 
 }

@@ -3,8 +3,9 @@ import { productsInterface } from '../../interfaces/Interfaces';
 
 const ShoppingCart: React.FC = () => {
   const [cart, setCart] = useState<Array<productsInterface>>([]);
-  const [promo, setPromo] = useState<number>(0); // Inicialmente 0 para un descuento de 0%
+  const [promo, setPromo] = useState<number>(0);
   const [totalValue, setTotalValue] = useState<number>(0);
+  const [token, setToken] = useState<string>('')
 
   const removeFromCart = (id: string) => {
     const updatedCart = cart.filter((product) => product._id !== id);
@@ -33,12 +34,38 @@ const ShoppingCart: React.FC = () => {
     }
   };
 
+  const fetchBuyMP = async () => {
+    try {
+      const res = await fetch('http://localhost:3000/api/cartPayment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: totalValue, description: cart, id: `${totalValue} + ${cart[0]}` })
+      })
+
+      const data = await res.json();
+      console.log(data);
+    
+      if(res.ok){
+        window.location.href = data;
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     getCart();
   }, []);
 
   useEffect(() => {
-    calculatePromoValue(); // Recalcular el total cada vez que cambie el carrito o el porcentaje
+    let token = localStorage.getItem('sesiontoken')
+    if (token) {
+      setToken(token)
+    }
+    calculatePromoValue();
   }, [cart, promo]);
 
   return (
@@ -80,10 +107,11 @@ const ShoppingCart: React.FC = () => {
           </ul>
           <div className="flex justify-between items-center mt-6">
             <p className="text-lg font-bold">Total: ${totalValue.toFixed(2)}</p>
-            <button className="px-6 py-2 bg-tobacco text-white rounded-lg hover:bg-tobacco">Proceder al pago</button>
+            <button className="px-6 py-2 bg-tobacco text-white rounded-lg hover:bg-tobacco" onClick={fetchBuyMP}>Proceder al pago</button>
           </div>
         </div>
       )}
+
     </div>
   );
 };

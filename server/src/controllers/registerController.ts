@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 export class RegisterController {
 
     // Registrar un usuario
-    public async regUser(req: Request, res: Response) {
+    public async regUser(req: Request, res: Response) {  
         try {            
             // Obtenemos los datos del front
             const data = req.body;

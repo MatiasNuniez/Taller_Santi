@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const Login: React.FC = () => {
   const [DNI, setDNI] = useState<string>("");
@@ -27,6 +28,8 @@ const Login: React.FC = () => {
   
         const data = await res.json();
         localStorage.setItem('sesiontoken', data.token);
+        const decoded = jwtDecode(data.token) as { rol?: string };
+        localStorage.setItem('rolxtabaqueria', decoded.rol || '')
         navigate('/'); 
       } catch (error) {
         console.error('Error al consultar a la base de datos', error);
@@ -87,7 +90,7 @@ const Login: React.FC = () => {
           </div>
         </form>
         <p className="text-center text-gray-600 text-sm mt-4">
-          ¿No tienes una cuenta? <a href="#" className="text-tobacco hover:underline">Regístrate</a>
+          ¿No tienes una cuenta? <a href="/Register" className="text-tobacco hover:underline">Regístrate</a>
         </p>
       </div> 
     </div>

@@ -27,7 +27,7 @@ const AddProduct: React.FC = () => {
 
     const [providers, setProviders] = useState<Array<ProviderInterface>>([])
 
-    const [userDNI, setUserDNI] = useState<string>('40790916')
+    const [token, setToken] = useState<string>('')
 
 
 
@@ -81,13 +81,26 @@ const AddProduct: React.FC = () => {
                 const res = await fetch('http://localhost:3000/api/newProduct', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ product: productComplete, userDNI })
+                    body: JSON.stringify({ product: productComplete })
                 });
                 if(!res.ok){
                     alert('Error al registar el producto en la base de datos')
                 }else{
+                    setIndexMarca(0)
+                    setIndexCategoria(0)
+                    setIdProvider('')
+                    product.costo = 0;
+                    product.descripcion = ''
+                    product.idProvider = ''
+                    product.nombre = ''
+                    product.precio_u = 0
+                    product.categoria = ''
+                    product.img = ''
+                    product.marca = ''
+                    product.cantidad = 0
                     alert('Producto registrado con éxito');
                 }                
             } catch (error) {
@@ -128,6 +141,10 @@ const AddProduct: React.FC = () => {
         }
     };
     useEffect(() => {
+        let token = localStorage.getItem('sesiontoken')
+        if (token) {
+          setToken(token)
+        }
         getCategoriesFromLocalStorage()
         getProvidersFromLocalStorage()
     }, [])
@@ -258,7 +275,7 @@ const AddProduct: React.FC = () => {
                     <div className="flex items-center justify-between">
                         <button
                             type="submit"
-                            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+                            className="w-full bg-tobacco text-white py-2 px-4 rounded-md transition-colors"
                         >
                             Registrar Producto
                         </button>

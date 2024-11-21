@@ -15,10 +15,9 @@ interface ModalProps {
   onClose: () => void;
   onSave: (data: productsInterface) => void;
   initialData: productsInterface; // Producto que se va a editar
-  userDNI:String;
 }
 
-const Modal: React.FC<ModalProps> = ({ onClose, onSave, initialData, userDNI }) => {
+const Modal: React.FC<ModalProps> = ({ onClose, onSave, initialData }) => {
   const [costo, setCosto] = useState<number>(initialData.costo);
   const [descripcion, setDescripcion] = useState<string>(initialData.descripcion);
   const [idProvider, setIdProvider] = useState<string>(initialData.idProvider || '');
@@ -26,14 +25,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onSave, initialData, userDNI }) 
   const [precioU, setPrecioU] = useState<number>(initialData.precio_u);
   const [img, setImg] = useState<string>(initialData.img);
   const [proveedores, setProveedores] = useState<ProviderInterface[]>([]);
-
-  // Cargar los proveedores del localStorage
-  useEffect(() => {
-    const storedProviders = localStorage.getItem('proveedores');
-    if (storedProviders) {
-      setProveedores(JSON.parse(storedProviders));
-    }
-  }, []);
+  const [token, setToken] = useState<string>('')
 
   const handleSubmit = async () => {
     try {
@@ -50,9 +42,10 @@ const Modal: React.FC<ModalProps> = ({ onClose, onSave, initialData, userDNI }) 
       const res = await fetch('http://localhost:3000/api/editProduct', {
         method:'PATCH',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ idProduct: formData._id, data: formData, userDNI })
+        body: JSON.stringify({ idProduct: formData._id, data: formData })
       })
       if (!res.ok) {
         throw new Error('Error al consultar a la base de dat  os')
@@ -64,6 +57,18 @@ const Modal: React.FC<ModalProps> = ({ onClose, onSave, initialData, userDNI }) 
     }
 
   };
+
+    // Cargar los proveedores del localStorage
+    useEffect(() => {
+      let token = localStorage.getItem('sesiontoken')
+      if (token) {
+        setToken(token)
+      }
+      const storedProviders = localStorage.getItem('proveedores');
+      if (storedProviders) {
+        setProveedores(JSON.parse(storedProviders));
+      }
+    }, []);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">

@@ -1,4 +1,2 @@
 -Cambiar el precio unitario de una misma categoria
--Arreglar Lo del (Category quede)
--Arreglar lo de carga de productos
 -Mercadopago

@@ -12,6 +12,7 @@ const productRouter_1 = require("./routes/productRouter");
 const cors_1 = __importDefault(require("cors"));
 const categoryRouter_1 = require("./routes/categoryRouter");
 const ventasRouter_1 = require("./routes/ventasRouter");
+const cartRouter_1 = require("./routes/cartRouter");
 class Server extends db_1.DataBase {
     constructor() {
         super();
@@ -23,9 +24,9 @@ class Server extends db_1.DataBase {
         this.app.use('/api', this.routes());
     }
     config() {
-        // Aplica CORS
         this.app.use((0, cors_1.default)({
-            origin: '*', // Cambiar '*' a una URL específica si necesitas habilitar credenciales
+            origin: 'http://localhost:3001', // Cambia al dominio de tu cliente
+            methods: 'GET,POST,PUT,PATCH,DELETE', // Cambiar '*' a una URL específica si necesitas habilitar credenciales
         }));
         // Asegúrate de que express pueda parsear JSON
         this.app.use(express_1.default.json());
@@ -36,7 +37,7 @@ class Server extends db_1.DataBase {
         });
     }
     routes() {
-        return [new loginRouter_1.LoginRouter().router, new registerRouter_1.RegisterRouter().router, new productRouter_1.ProductRouter().router, new providerRouter_1.ProviderRouter().router, new categoryRouter_1.CategoryRouter().router, new ventasRouter_1.VentasRouter().router];
+        return [new loginRouter_1.LoginRouter().router, new registerRouter_1.RegisterRouter().router, new productRouter_1.ProductRouter().router, new providerRouter_1.ProviderRouter().router, new categoryRouter_1.CategoryRouter().router, new ventasRouter_1.VentasRouter().router, new cartRouter_1.CartRouter().router];
     }
 }
 new Server();

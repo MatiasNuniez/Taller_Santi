@@ -2,47 +2,65 @@ import { productInterface } from "../interfaces/productInterface"
 import { userModel } from "../models/usersModel"
 import { Request, Response } from "express"
 import { productModel } from "../models/productsModel"
+import { SECRETKEY } from "../config/config";
+import jsonwebtoken from 'jsonwebtoken'
 
 export class ProductController {
 
 
     public async getAllProducts(req: Request, res: Response) {
-        const { userDNI } = req.params
-        const user = await userModel.findOne({ DNI: userDNI })
 
-        if (!user) {
-            throw new Error('Usuario no encontrado')
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'Token no proporcionado' });
         }
 
-        if (user.rol === 'admin' && user.state) {
-            try {
-                const data = await productModel.find({})
-                res.status(200).json(data)
+        try {
+            const decoded = jsonwebtoken.verify(token, SECRETKEY || '') as { id: string };
+            const user = await userModel.findById(decoded.id);
 
-            } catch (error) {
-                throw new Error('Error al obtener los productos')
+            if (!user) {
+                throw new Error('Usuario no encontrado')
             }
+
+            if (user.state) {
+                try {
+                    const data = await productModel.find({})
+                    res.status(200).json(data)
+
+                } catch (error) {
+                    throw new Error('Error al obtener los productos')
+                }
+            }
+
+        } catch (error) {
+            return res.status(403).json({ message: 'Token inválido o expirado', error });
         }
     }
 
 
     // Agregamos un nuevo producto
     public async addProduct(req: Request, res: Response) {
+        const { product } = req.body;
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'Token no proporcionado' });
+        }
+
         try {
-            const { product, userDNI } = req.body;
-            console.log(product);
-            console.log(userDNI);
-
-            // Buscar el usuario en la base de datos
-            const user = await userModel.findOne({ DNI: userDNI });
-
+            const decoded = jsonwebtoken.verify(token, SECRETKEY || '') as { id: string };
+            const user = await userModel.findById(decoded.id);
             // Verificar si el usuario existe
             if (!user) {
                 return res.status(404).json({ error: 'Usuario no encontrado' });
             }
 
             // Verificar si el usuario tiene rol de admin y su estado es activo
-            if (user.rol === 'admin' && user.state) {
+            if (user.state) {
                 // Validar que los datos del producto sean correctos
                 if (!product.nombre || !product.costo || !product.descripcion || !product.precio_u || !product.idProvider || !product.cantidad) {
                     return res.status(400).json({ error: 'Datos del producto incompletos o inválidos' });
@@ -52,7 +70,7 @@ export class ProductController {
                 const newProduct: productInterface = {
                     nombre: product.nombre,
                     costo: product.costo,
-                    cantidad:product.cantidad,
+                    cantidad: product.cantidad,
                     descripcion: product.descripcion,
                     precio_u: product.precio_u,
                     idProvider: product.idProvider,
@@ -72,66 +90,92 @@ export class ProductController {
             return res.status(401).json({ error: 'No posee los permisos necesarios' });
 
         } catch (error) {
-            // Manejar errores inesperados
-            console.error('Error al agregar el producto:', error);
-            return res.status(500).json({ error: 'Error al consultar la base de datos' });
+            return res.status(403).json({ message: 'Token inválido o expirado', error });
         }
     }
 
 
     // Editar productos
     public async editProduct(req: Request, res: Response) {
-        const { idProduct, data, userDNI } = req.body;
+        const { idProduct, data } = req.body;
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+
+
+        if (!token) {
+            return res.status(401).json({ message: 'Token no proporcionado' });
+        }
 
         if (!idProduct || !data) {
             return res.status(400).json({ message: 'Faltan datos' });
         }
 
-        const user = await userModel.findOne({ DNI: userDNI });
-        if (user && user.rol === 'admin' && user.state === true) {
-            try {
-                const updatedProduct = await productModel.findByIdAndUpdate(
-                    idProduct,
-                    data,
-                    { new: true }
-                );
+        try {
+            const decoded = jsonwebtoken.verify(token, SECRETKEY || '') as { id: string };
+            const user = await userModel.findById(decoded.id);
 
-                if (!updatedProduct) {
-                    return res.status(404).json({ message: 'Producto no encontrado' });
+            if (user && user.state === true) {
+                try {
+                    const updatedProduct = await productModel.findByIdAndUpdate(
+                        idProduct,
+                        data,
+                        { new: true }
+                    );
+
+                    if (!updatedProduct) {
+                        return res.status(404).json({ message: 'Producto no encontrado' });
+                    }
+
+                    return res.status(200).json(updatedProduct);
+                } catch (error) {
+                    return res.status(500).json({ message: 'Error interno del servidor', error });
                 }
-
-                return res.status(200).json(updatedProduct);
-            } catch (error) {
-                return res.status(500).json({ message: 'Error interno del servidor', error });
+            } else {
+                return res.status(401).json({ message: 'No posee los permisos necesarios' });
             }
-        } else {
-            return res.status(401).json({ message: 'No posee los permisos necesarios' });
+
+        } catch (error) {
+            return res.status(403).json({ message: 'Token inválido o expirado', error });
         }
     }
 
     // Eliminar producto
     public async deleteProduct(req: Request, res: Response) {
-        const { productId, userDNI } = req.params;
+        const { productId } = req.params;
 
-        if (!productId) {
-            return res.status(400).json({ message: 'Falta el id del elemento que se quiere eliminar' });
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'Token no proporcionado' });
         }
 
-        const user = await userModel.findOne({ DNI: userDNI });
-        if (user && user.rol === 'admin' && user.state === true) {
-            try {
-                const deleteProduct = await productModel.findByIdAndDelete(productId);
+        try {
+            const decoded = jsonwebtoken.verify(token, SECRETKEY || '') as { id: string };
+            const user = await userModel.findById(decoded.id);
 
-                if (!deleteProduct) {
-                    return res.status(404).json({ message: 'Producto no encontrado' });
-                }
-
-                return res.status(200).json({ message: 'Producto eliminado correctamente' });
-            } catch (error) {
-                return res.status(500).json({ message: 'Error interno del servidor', error });
+            if (!productId) {
+                return res.status(400).json({ message: 'Falta el id del elemento que se quiere eliminar' });
             }
-        } else {
-            return res.status(401).json({ message: 'No posee los permisos necesarios' });
+
+            if (user && user.rol === 'admin' && user.state === true) {
+                try {
+                    const deleteProduct = await productModel.findByIdAndDelete(productId);
+
+                    if (!deleteProduct) {
+                        return res.status(404).json({ message: 'Producto no encontrado' });
+                    }
+
+                    return res.status(200).json({ message: 'Producto eliminado correctamente' });
+                } catch (error) {
+                    return res.status(500).json({ message: 'Error interno del servidor', error });
+                }
+            } else {
+                return res.status(401).json({ message: 'No posee los permisos necesarios' });
+            }
+
+        } catch (error) {
+            return res.status(403).json({ message: 'Token inválido o expirado', error });
         }
     }
 }
