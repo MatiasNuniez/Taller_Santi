@@ -44,7 +44,7 @@ class CartController {
                     },
                     auto_return: 'approved',
                     binary_mode: true,
-                    notification_url: 'https://badb-190-136-150-11.ngrok-free.app/api/paymentInfo'
+                    notification_url: 'https://cdb8-190-136-150-11.ngrok-free.app/api/paymentInfo'
                 };
                 const result = yield this.preference.create({ body });
                 if (result) {

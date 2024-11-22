@@ -1,2 +1,0 @@
--Cambiar el precio unitario de una misma categoria
--Mercadopago

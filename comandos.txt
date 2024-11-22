@@ -1,0 +1,13 @@
+------------------------SERVER---------------------
+Solo por primera vez:Posicion server "npm install", luego cada vez que quieras iniciar el server npm run start.
+
+-------------------------cliente-----------------
+Solo por primera vez:Posicion client "npm install", luego cada vez que quieras iniciar el programa npm start.
+
+----------------------ngrok-------------------
+cada vez antes de iniciar el server levantar el gnrok y le damos el comando en la consola de "ngrok http 3000" y cambiar el ip de localhost en notification_url que esta en
+notification_url esta en controllers/cartcontrollers y en la funcion getDataPayment por ejemplo si tenemos esto https://badb-190-136-150-11.ngrok-free.app/api/paymentInfo y la nueva es
+esta https://cdb8-190-136-150-11.ngrok-free.app, nos quedaria asi https://cdb8-190-136-150-11.ngrok-free.app/api/paymentInfo.
+
+
+-------------------------------------Pasos para probar el programa----------------------------

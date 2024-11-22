@@ -41,7 +41,7 @@ const Index: React.FC = () => {
     try {
       const deleteProduct = await fetch(`http://localhost:3000/api/deleteProduct/${id}`, {
         method: 'DELETE',
-        headers:{
+        headers: {
           'Authorization': `Bearer ${token}`,
         }
       })
@@ -78,7 +78,7 @@ const Index: React.FC = () => {
     if (storedToken) {
       setToken(storedToken);
     }
-  
+
     const storedRol = localStorage.getItem('rolxtabaqueria');
     setRol(storedRol === 'admin' ? 'admin' : 'empleado');
     localStorage.setItem('cart', '');
@@ -87,7 +87,7 @@ const Index: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       if (!token) return; // No intentar la petición si el token aún no está disponible
-  
+
       try {
         const res = await fetch(`http://localhost:3000/api/products`, {
           method: 'GET',
@@ -96,11 +96,11 @@ const Index: React.FC = () => {
             'Authorization': `Bearer ${token}`
           }
         });
-  
+
         if (!res.ok) {
           throw new Error('No se completó la petición');
         }
-  
+
         const data = await res.json();
         if (data.length > 0) {
           setProducts(data);
@@ -111,10 +111,10 @@ const Index: React.FC = () => {
         console.error('Error al consultar a la base de datos desde getProductos', error);
       }
     };
-  
+
     fetchProducts();
   }, [token]);
-  
+
   return (
     <div className="p-6">
       <div className="mb-4">
@@ -135,21 +135,21 @@ const Index: React.FC = () => {
               <img
                 src={product.img}
                 alt={product.nombre}
-                className="w-full h-48 object-cover"
+                className="w-full h-48 object-contain"
               />
               <div className="p-4">
                 <h3 className="text-lg font-bold text-gray-800">{product.nombre}</h3>
                 <p className="text-gray-600 text-sm">{product.descripcion}</p>
                 <div className="mt-4 flex justify-between items-center space-x-2">
                   <span className="text-2xl font-semibold text-tobacco">${product.precio_u}</span>
-                  {rol === 'admin' ? 
-                                    <button
-                                    className="bg-red-600 text-white px-3 py-1 rounded-full hover:bg-red-500 transition-colors"
-                                    onClick={() => removeToDDBB(product._id)}
-                                  >
-                                    Eliminar
-                                  </button>
-                                  : null
+                  {rol === 'admin' ?
+                    <button
+                      className="bg-red-600 text-white px-3 py-1 rounded-full hover:bg-red-500 transition-colors"
+                      onClick={() => removeToDDBB(product._id)}
+                    >
+                      Eliminar
+                    </button>
+                    : null
                   }
                   <button
                     className="bg-yellow-400 text-white px-3 py-1 rounded-full hover:bg-yellow-300 transition-colors"
