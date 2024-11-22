@@ -9,27 +9,17 @@ class VentaModel {
     constructor() {
         const VentaModel = new Schema<VentaInterface>({
             fecha: {
-                type: Date,
+                type: Number,
                 default: Date.now()
             },
-            idEmployeed: {
+            idVenta: {
                 type: String,
                 required: true
             },
-            productos: [{
-                idProducto: {
-                    type: String,
-                    required: true
-                },
-                cantidad: {
-                    type: Number,
-                    required: true
-                },
-                total:{
-                    type:Number,
-                    required:true
-                }
-            }]
+            total: {
+                type: Number,
+                required: true
+            }
         })
 
         this._model = mongoose.model('ventaModel', VentaModel)

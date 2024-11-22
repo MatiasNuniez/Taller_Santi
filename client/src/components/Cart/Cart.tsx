@@ -3,6 +3,7 @@ import { productsInterface } from '../../interfaces/Interfaces';
 
 const ShoppingCart: React.FC = () => {
   const [cart, setCart] = useState<Array<productsInterface>>([]);
+  const [cartCopy, setCartCopy] = useState<Array<productsInterface>>([]);
   const [promo, setPromo] = useState<number>(0);
   const [totalValue, setTotalValue] = useState<number>(0);
   const [token, setToken] = useState<string>('')
@@ -11,6 +12,33 @@ const ShoppingCart: React.FC = () => {
     const updatedCart = cart.filter((product) => product._id !== id);
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
+  };
+
+  const updateQuantity = (id: string, quantity: number) => {
+    const updatedCart = cart.map((product) => {
+      if (product._id === id) {
+        return { ...product, cantidad: quantity }; 
+      }
+      return product;
+    });
+    setCart(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  };
+
+  const increaseQuantity = (id: string) => {
+    const product = cart.find((product) => product._id === id);
+    // const quantityController = cartCopy.find((productCopy) => productCopy._id === id);
+    if (product ) {
+      // && quantityController && product.cantidad < quantityController.cantidad
+      updateQuantity(id, product.cantidad + 1);
+    }
+  };
+
+  const decreaseQuantity = (id: string) => {
+    const product = cart.find((product) => product._id === id);
+    if (product && product.cantidad > 1) {
+      updateQuantity(id, product.cantidad - 1); 
+    }
   };
 
   const calculateTotal = () => {
@@ -23,14 +51,16 @@ const ShoppingCart: React.FC = () => {
       const discount = total * (promo / 100);
       setTotalValue(total - discount);
     } else {
-      setTotalValue(total); // Sin descuento
+      setTotalValue(total);
     }
   };
 
   const getCart = () => {
     const cartStored = localStorage.getItem('cart');
+    // const cartStoredCopy = localStorage.getItem('cart');
     if (cartStored) {
       setCart(JSON.parse(cartStored));
+      // setCartCopy(JSON.parse(cartStoredCopy));
     }
   };
 
@@ -41,13 +71,13 @@ const ShoppingCart: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ amount: totalValue, description: cart, id: `${totalValue} + ${cart[0]}` })
+        body: JSON.stringify({ amount: totalValue, description: cart, id: `${totalValue}${cart[0].costo}` })
       })
 
       const data = await res.json();
       console.log(data);
-    
-      if(res.ok){
+
+      if (res.ok) {
         window.location.href = data;
       }
 
@@ -93,9 +123,24 @@ const ShoppingCart: React.FC = () => {
                   <h3 className="font-semibold">{product.nombre}</h3>
                   <p className="text-gray-500">Precio: ${product.precio_u}</p>
                   <div className="flex items-center mt-2">
-                    <button className="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-l">-</button>
-                    <span className="px-4">{product.cantidad}</span>
-                    <button className="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-r">+</button>
+                    <button 
+                      onClick={() => decreaseQuantity(product._id)} 
+                      className="px-2 py-1 bg-gray-300 rounded-l hover:bg-gray-400"
+                    >
+                      -
+                    </button>
+                    <input 
+                      type="number" 
+                      value={product.cantidad} 
+                      readOnly 
+                      className="w-16 text-center border-t border-b border-gray-300" 
+                    />
+                    <button 
+                      onClick={() => increaseQuantity(product._id)} 
+                      className="px-2 py-1 bg-gray-300 rounded-r hover:bg-gray-400"
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
                 <div>
@@ -111,7 +156,6 @@ const ShoppingCart: React.FC = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

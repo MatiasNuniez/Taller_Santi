@@ -24,7 +24,7 @@ class Server extends DataBase {
 
     public config() {
         this.app.use(cors({
-            origin: 'http://localhost:3001', // Cambia al dominio de tu cliente
+            origin: '*', // Cambia al dominio de tu cliente
             methods: 'GET,POST,PUT,PATCH,DELETE',   // Cambiar '*' a una URL específica si necesitas habilitar credenciales
         }))
         // Asegúrate de que express pueda parsear JSON

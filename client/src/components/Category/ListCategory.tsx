@@ -11,9 +11,15 @@ interface Categoria {
 const ListaCategorias: React.FC = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [modalAbierto, setModalAbierto] = useState(false);
-  const [categoriaActual, setCategoriaActual] = useState<Categoria>({_id:'', marca:'',nombre:'',urlImg:''});
-  const [token, setToken] = useState<string>('')
+  const [categoriaActual, setCategoriaActual] = useState<Categoria>({
+    _id: "",
+    marca: "",
+    nombre: "",
+    urlImg: "",
+  });
+  const [token, setToken] = useState<string>("");
 
+  // Función para abrir el modal
   const abrirModal = (categoria?: Categoria) => {
     if (categoria) {
       setCategoriaActual(categoria); // Editar categoría
@@ -33,113 +39,130 @@ const ListaCategorias: React.FC = () => {
 
   // Función para obtener todas las categorías
   const getAllCategories = async () => {
+    if (!token) return; // No hacer la petición si el token no está disponible
+
     try {
       const res = await fetch(`http://localhost:3000/api/category`, {
         method: 'GET',
-        headers:{
-          'Authorization': `Bearer ${token}`
-        }
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
       });
+
       if (res.ok) {
         const data = await res.json();
         setCategorias(data);
+      } else {
+        console.error("Error en la respuesta de la API", res.status);
       }
     } catch (error) {
-      console.error('Error al hace la peticion a la base de datos en categoria')
+      console.error('Error al hacer la petición a la base de datos en categoria', error);
     }
-  }
+  };
 
-// Función para actualizar localStorage
-const actualizarLocalStorageCategorias = (categoriasActualizadas: Array<Categoria>) => {
-  localStorage.setItem('categorias', JSON.stringify(categoriasActualizadas));
-}
+  // Función para actualizar el localStorage
+  const actualizarLocalStorageCategorias = (categoriasActualizadas: Array<Categoria>) => {
+    localStorage.setItem('categorias', JSON.stringify(categoriasActualizadas));
+  };
 
-const guardarCategoria = async () => {
-  if (categoriaActual) {
-    if (categoriaActual._id) {
-      try {
-        const response = await fetch(`http://localhost:3000/api/category`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ data: categoriaActual, idCategory: categoriaActual._id })
-        });
+  const guardarCategoria = async () => {
+    if (categoriaActual) {
+      if (categoriaActual._id) {
+        try {
+          const response = await fetch(`http://localhost:3000/api/category`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ data: categoriaActual, idCategory: categoriaActual._id }),
+          });
 
-        if (response.ok) {
-          const categoriaEditada = await response.json();
-          const categoriasActualizadas = categorias.map((c) => (c._id === categoriaEditada._id ? categoriaEditada : c));
-          setCategorias(categoriasActualizadas);
-          actualizarLocalStorageCategorias(categoriasActualizadas);
-          setCategoriaActual({ _id: '', marca: '', nombre: '', urlImg: '' });
-          cerrarModal();
-        }
-      } catch (error) {
-        console.error("Error al editar la categoría:", error);
-      }
-    } else {
-      // Agregar nueva categoría
-      try {
-        const response = await fetch('http://localhost:3000/api/category', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ nombre: categoriaActual.nombre, marca: categoriaActual.marca, urlImg: categoriaActual.urlImg }),
-        });
-
-        if (response.ok) {
-          let nuevaCategoria = await response.json();
-
-          // Si la API devuelve el objeto bajo una clave extra, como "Nueva_categoria", extrae solo el objeto necesario
-          if (nuevaCategoria.Nueva_categoria) {
-            nuevaCategoria = nuevaCategoria.Nueva_categoria;
+          if (response.ok) {
+            const categoriaEditada = await response.json();
+            const categoriasActualizadas = categorias.map((c) => (c._id === categoriaEditada._id ? categoriaEditada : c));
+            setCategorias(categoriasActualizadas);
+            actualizarLocalStorageCategorias(categoriasActualizadas);
+            setCategoriaActual({ _id: '', marca: '', nombre: '', urlImg: '' });
+            cerrarModal();
           }
-
-          const categoriasActualizadas = [...categorias, nuevaCategoria];
-          setCategorias(categoriasActualizadas);
-          actualizarLocalStorageCategorias(categoriasActualizadas);
-          setCategoriaActual({ _id: '', marca: '', nombre: '', urlImg: '' });
-          cerrarModal();
+        } catch (error) {
+          console.error("Error al editar la categoría:", error);
         }
-      } catch (error) {
-        console.error("Error al agregar la categoría:", error);
+      } else {
+        // Agregar nueva categoría
+        try {
+          const response = await fetch('http://localhost:3000/api/category', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              nombre: categoriaActual.nombre,
+              marca: categoriaActual.marca,
+              urlImg: categoriaActual.urlImg,
+            }),
+          });
+
+          if (response.ok) {
+            let nuevaCategoria = await response.json();
+
+            if (nuevaCategoria.Nueva_categoria) {
+              nuevaCategoria = nuevaCategoria.Nueva_categoria;
+            }
+
+            const categoriasActualizadas = [...categorias, nuevaCategoria];
+            setCategorias(categoriasActualizadas);
+            actualizarLocalStorageCategorias(categoriasActualizadas);
+            setCategoriaActual({ _id: '', marca: '', nombre: '', urlImg: '' });
+            cerrarModal();
+          }
+        } catch (error) {
+          console.error("Error al agregar la categoría:", error);
+        }
       }
     }
-  }
-};
+  };
 
-// Función para eliminar una categoría por ID
-const eliminarCategoria = async (id: string) => {
-  try {
-    const response = await fetch(`http://localhost:3000/api/deleteCategory/${id}`, {
-      method: 'DELETE',
-      headers:{
-        'Authorization': `Bearer ${token}`
+  // Función para eliminar una categoría por ID
+  const eliminarCategoria = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/deleteCategory/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const categoriasActualizadas = categorias.filter((categoria) => categoria._id !== id);
+        setCategorias(categoriasActualizadas);
+        actualizarLocalStorageCategorias(categoriasActualizadas);
       }
-    });
-
-    if (response.ok) {
-      const categoriasActualizadas = categorias.filter((categoria) => categoria._id !== id);
-      setCategorias(categoriasActualizadas);
-      actualizarLocalStorageCategorias(categoriasActualizadas);
+    } catch (error) {
+      console.error("Error al eliminar la categoría:", error);
     }
-  } catch (error) {
-    console.error("Error al eliminar la categoría:", error);
-  }
-};
-
+  };
 
   useEffect(() => {
-    let token = localStorage.getItem('sesiontoken')
-    if (token) {
-      setToken(token)
+    const tokenFromStorage = localStorage.getItem('sesiontoken');
+    if (tokenFromStorage) {
+      setToken(tokenFromStorage);
     }
-    getAllCategories();
-  }, [])
+  }, []);
 
+  useEffect(() => {
+    // Solo realizar la llamada a la API si el token está disponible
+    if (token) {
+      getAllCategories();
+    }
+  }, [token]); // Dependemos de 'token' para obtener las categorías
+
+  useEffect(() => {
+    // Esto es solo para depurar, puedes eliminarlo cuando todo funcione
+    console.log("Categorías actualizadas:", categorias);
+  }, [categorias]); // Verifica que el estado de categorias se actualice correctamente
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">

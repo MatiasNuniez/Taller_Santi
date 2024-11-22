@@ -10,7 +10,6 @@ export class VentasRouter extends BaseRouter<VentasController>{
     }
     // Rutas para las peticiones de register
     routes(): void {
-        this.router.post('/ventas', (req, res) => this.controller.addSale(req, res))
         this.router.get('/ventas', (req, res) => this.controller.getSales(req, res))
     }
 }

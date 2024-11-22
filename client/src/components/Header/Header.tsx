@@ -119,6 +119,12 @@ const Header: React.FC = () => {
               >
                 Dashboard
               </Link>
+              <Link
+                to="/SalesHistory"
+                className="text-[#8B4513] font-bold hover:text-white transition-colors"
+              >
+                Ventas
+              </Link>
               <button
                 onClick={handleLogout}
                 className="bg-red-500 text-white hover:text-white transition-colors rounded-md px-4 py-1 ml-4"
@@ -162,6 +168,12 @@ const Header: React.FC = () => {
                 </Link>
                 <Link to="/dashboard" className="block text-white hover:text-gray-300">
                   Dashboard
+                </Link>
+                <Link
+                  to="/SalesHistory"
+                  className="text-[#8B4513] font-bold hover:text-white transition-colors"
+                >
+                  Ventas
                 </Link>
                 <button
                   onClick={handleLogout}

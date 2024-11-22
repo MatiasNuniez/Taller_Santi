@@ -1,0 +1,133 @@
+Detalles del pago: {
+    accounts_info: null,
+    acquirer_reconciliation: [],
+    additional_info: {
+      authentication_code: null,
+      available_balance: null,
+      ip_address: '190.136.150.11',
+      items: [ [Object] ],
+      nsu_processadora: null
+    },
+    authorization_code: '301299',
+    binary_mode: true,
+    brand_id: null,
+    build_version: '3.79.0-rc-3',
+    call_for_authorize_id: null,
+    captured: true,
+    card: {
+      cardholder: { identification: [Object], name: 'APRO' },
+      country: null,
+      date_created: '2024-11-21T19:38:44.000-04:00',
+      date_last_updated: '2024-11-21T19:38:44.000-04:00',
+      expiration_month: 11,
+      expiration_year: 2025,
+      first_six_digits: '503175',
+      id: null,
+      last_four_digits: '0604',
+      tags: null
+    },
+    charges_details: [
+      {
+        accounts: [Object],
+        amounts: [Object],
+        client_id: 0,
+        date_created: '2024-11-21T19:38:43.000-04:00',
+        id: '1328435607-001',
+        last_updated: '2024-11-21T19:38:43.000-04:00',
+        metadata: [Object],
+        name: 'mercadopago_fee',
+        refund_charges: [],
+        reserve_id: null,
+        type: 'fee'
+      }
+    ],
+    charges_execution_info: {
+      internal_execution: {
+        date: '2024-11-21T19:38:43.954-04:00',
+        execution_id: '01JD8HF8T2KN1VDN9Z25C77NM5'
+      }
+    },
+    collector_id: 322177690,
+    corporation_id: null,
+    counter_currency: null,
+    coupon_amount: 0,
+    currency_id: 'ARS',
+    date_approved: '2024-11-21T19:38:44.448-04:00',
+    date_created: '2024-11-21T19:38:43.958-04:00',
+    date_last_updated: '2024-11-21T19:38:44.448-04:00',
+    date_of_expiration: null,
+    deduction_schema: null,
+    description: 'Total de carrito',
+    differential_pricing_id: null,
+    external_reference: null,
+    fee_details: [ { amount: 82, fee_payer: 'collector', type: 'mercadopago_fee' } ],
+    financing_group: null,
+    id: 1328435607,
+    installments: 1,
+    integrator_id: null,
+    issuer_id: '3',
+    live_mode: false,
+    marketplace_owner: null,
+    merchant_account_id: null,
+    merchant_number: null,
+    metadata: {},
+    money_release_date: '2024-12-09T19:38:44.448-04:00',
+    money_release_schema: null,
+    money_release_status: 'pending',
+    notification_url: 'https://91d4-190-136-150-11.ngrok-free.app/api/paymentInfo',
+    operation_type: 'regular_payment',
+    order: { id: '25258447471', type: 'mercadopago' },
+    payer: {
+      identification: { number: '32659430', type: 'DNI' },
+      entity_type: null,
+      phone: { number: null, extension: null, area_code: null },
+      last_name: null,
+      id: '1641379228',
+      type: null,
+      first_name: null,
+      email: 'test_user_80507629@testuser.com'
+    },
+    payment_method: {
+      data: { routing_data: [Object] },
+      id: 'master',
+      issuer_id: '3',
+      type: 'prepaid_card'
+    },
+    payment_method_id: 'master',
+    payment_type_id: 'prepaid_card',
+    platform_id: null,
+    point_of_interaction: {
+      business_info: {
+        branch: 'Merchant Services',
+        sub_unit: 'checkout_pro',
+        unit: 'online_payments'
+      },
+      transaction_data: { e2e_id: null },
+      type: 'CHECKOUT'
+    },
+    pos_id: null,
+    processing_mode: 'aggregator',
+    refunds: [],
+    release_info: null,
+    shipping_amount: 0,
+    sponsor_id: null,
+    statement_descriptor: 'Mercadopago*fake',
+    status: 'approved',
+    status_detail: 'accredited',
+    store_id: null,
+    tags: null,
+    taxes_amount: 0,
+    transaction_amount: 2000,
+    transaction_amount_refunded: 0,
+    transaction_details: {
+      acquirer_reference: null,
+      external_resource_url: null,
+      financial_institution: null,
+      installment_amount: 2000,
+      net_received_amount: 1918,
+      overpaid_amount: 0,
+      payable_deferral_period: null,
+      payment_method_reference_id: null,
+      total_paid_amount: 2000
+    }
+  }

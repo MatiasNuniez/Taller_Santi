@@ -20,29 +20,6 @@ const Index: React.FC = () => {
   // Asignacion de los resultados a la variable para poder mapearlo cuando se cambie el valor.
   const filterProducts = filtrado(products, buscado);
 
-  // Peticion a la api para obtener todos los productos en la base de datos.
-  const getProducts = async () => {
-    try {
-      const res = await fetch(`http://localhost:3000/api/products`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (!res.ok) {
-        throw new Error('No se completó la petición');
-      }
-      const data = await res.json();
-      if (data.length > 0){
-        setProducts(data);
-      }
-    } catch (error) {
-      alert('Error al consultar a la base de datos');
-    }
-  };
-
   // Funcion para agregar productos al carrito
   const addToCart = (newProduct: productsInterface) => {
     const cartStored = localStorage.getItem('cart');
@@ -96,22 +73,48 @@ const Index: React.FC = () => {
     setBuscado(searchValue);
   };
 
-  // Hook que se ejecuta cada vez que se renderiza la pagina
   useEffect(() => {
-    let token = localStorage.getItem('sesiontoken')
-    if (token) {
-      setToken(token)
+    const storedToken = localStorage.getItem('sesiontoken');
+    if (storedToken) {
+      setToken(storedToken);
     }
-    getProducts();
-    let rol = localStorage.getItem('rolxtabaqueria')
-    if (rol === 'admin') {
-      setRol('admin')
-    }else{
-      setRol('empleado')
-    }
+  
+    const storedRol = localStorage.getItem('rolxtabaqueria');
+    setRol(storedRol === 'admin' ? 'admin' : 'empleado');
     localStorage.setItem('cart', '');
-  }, [token]);
+  }, []);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (!token) return; // No intentar la petición si el token aún no está disponible
+  
+      try {
+        const res = await fetch(`http://localhost:3000/api/products`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+  
+        if (!res.ok) {
+          throw new Error('No se completó la petición');
+        }
+  
+        const data = await res.json();
+        if (data.length > 0) {
+          setProducts(data);
+        } else {
+          console.warn('No se encontraron productos en la base de datos.');
+        }
+      } catch (error) {
+        console.error('Error al consultar a la base de datos desde getProductos', error);
+      }
+    };
+  
+    fetchProducts();
+  }, [token]);
+  
   return (
     <div className="p-6">
       <div className="mb-4">

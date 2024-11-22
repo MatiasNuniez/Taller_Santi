@@ -20,6 +20,7 @@ const config_1 = require("../config/config");
 class CategoryController {
     getAllCategories(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log("Hola");
             const authHeader = req.headers['authorization'];
             const token = authHeader && authHeader.split(' ')[1];
             if (!token) {

@@ -9,6 +9,9 @@ export class CategoryController {
 
     public async getAllCategories(req: Request, res: Response) {
 
+        console.log("Hola");
+        
+
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
 
