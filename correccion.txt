@@ -1,1 +1,0 @@
-Cuando entre si no tiene token que lo redirija a inicio de sesion.
