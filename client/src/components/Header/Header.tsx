@@ -89,7 +89,7 @@ const Header: React.FC = () => {
         location.pathname.toLowerCase() === "/register" ? null : (
         <header className="bg-gradient-to-r from-white via-white to-[#8B4513]">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-            {/* Logo de la Tabaquería */}
+
             <div className="flex items-center space-x-4">
               <img
                 src={img}
@@ -99,7 +99,6 @@ const Header: React.FC = () => {
               <h1 className="text-2xl font-bold text-[#8B4513]">La Tabaquería</h1>
             </div>
 
-            {/* Navegación */}
             <nav className="hidden md:flex space-x-6">
               <Link
                 to="/"
@@ -134,7 +133,7 @@ const Header: React.FC = () => {
 
             </nav>
 
-            {/* Botón del Menú Móvil */}
+
             <button
               onClick={toggleMenu}
               className="md:hidden text-[#8B4513] focus:outline-none"
@@ -156,7 +155,7 @@ const Header: React.FC = () => {
             </button>
           </div>
 
-          {/* Menú desplegable para móvil */}
+
           {isOpen && (
             <div className="md:hidden bg-[#8B4513]">
               <nav className="px-4 py-4 space-y-2">

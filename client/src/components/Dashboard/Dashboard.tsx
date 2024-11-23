@@ -7,10 +7,10 @@ const Dashboard: React.FC = () => {
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold mb-8">Panel de Administración</h1>
 
-            {/* Grid Responsive */}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-                {/* Card - Agregar Producto */}
+
                 <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                     <h2 className="text-xl font-bold mb-4">Agregar Producto</h2>
                     <p className="text-gray-600 mb-4">
@@ -24,7 +24,7 @@ const Dashboard: React.FC = () => {
                     </Link>
                 </div>
 
-                {/* Card - Agregar Proveedor */}
+
                 <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                     <h2 className="text-xl font-bold mb-4">Agregar Proveedor</h2>
                     <p className="text-gray-600 mb-4">
@@ -38,7 +38,7 @@ const Dashboard: React.FC = () => {
                     </Link>
                 </div>
 
-                {/* Card - Agregar categoria de productos */}
+
                 <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                     <h2 className="text-xl font-bold mb-4">Agregar Categorias</h2>
                     <p className="text-gray-600 mb-4">
@@ -52,7 +52,7 @@ const Dashboard: React.FC = () => {
                     </Link>
                 </div>
 
-                {/* Historial de ventas*/}
+
                 <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                     <h2 className="text-xl font-bold mb-4">Gestión de ventas</h2>
                     <p className="text-gray-600 mb-4">

@@ -40,7 +40,7 @@ const SalesHistory: React.FC = () => {
     <div className="max-w-lg mx-auto mt-10">
       <h1 className="text-2xl font-bold text-center mb-4">Historial de Ventas</h1>
       
-      {/* Buscador */}
+
       <div className="mb-6">
         <input
           type="text"

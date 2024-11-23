@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-// Definición del tipo de proveedor
 interface Proveedor {
   _id: string;
   nombre: string;
@@ -12,15 +11,15 @@ interface Proveedor {
 }
 
 const ListaProveedores: React.FC = () => {
-  // Estado inicial con algunos proveedores
+
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
-  // Estados para controlar el modal
+
   const [modalAbierto, setModalAbierto] = useState(false);
   const [proveedorActual, setProveedorActual] = useState<Proveedor>({ apellido: '', cuit: '', direccion: '', email: '', _id: '', nombre: '', telefono: '' });
   const [token, setToken] = useState<string>('')
 
 
-  // Funcion para obtener todos los proveedores
+
   const getAllProviders = async () => {
     try {
       const res = await fetch(`http://localhost:3000/api/providers`, {
@@ -38,31 +37,31 @@ const ListaProveedores: React.FC = () => {
     }
   }
 
-  // Función para abrir el modal
+
   const abrirModal = (proveedor?: Proveedor) => {
     if (proveedor) {
-      setProveedorActual(proveedor); // Editar proveedor
+      setProveedorActual(proveedor); 
     } 
     setModalAbierto(true);
   };
 
-  // Función para cerrar el modal
+
   const cerrarModal = () => {
     setModalAbierto(false);
   };
 
-  // Función para manejar el cambio en los campos del formulario
+
 const manejarCambio = (e: React.ChangeEvent<HTMLInputElement>) => {
   if (proveedorActual) {
     setProveedorActual({ ...proveedorActual, [e.target.name]: e.target.value });
   }
 };
 
-// Función para guardar el proveedor (agregar o editar) y actualizar en localStorage
+
 const guardarProveedor = async () => {
   if (proveedorActual) {
     if (proveedorActual._id) {
-      // Editar proveedor existente
+
       try {
         const response = await fetch(`http://localhost:3000/api/editProvider`, {
           method: 'PATCH',
@@ -87,7 +86,7 @@ const guardarProveedor = async () => {
         console.error("Error al editar el proveedor:", error);
       }
     } else {
-      // Agregar nuevo proveedor
+
       try {
         const response = await fetch('http://localhost:3000/api/newProvider', {
           method: 'POST',
@@ -113,7 +112,6 @@ const guardarProveedor = async () => {
   }
 };
 
-// Función para eliminar un proveedor por ID y actualizar en localStorage
 const eliminarProveedor = async (id: string) => {
   try {
     const response = await fetch(`http://localhost:3000/api/deleteProvider/${id}`, {

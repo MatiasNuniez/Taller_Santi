@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-
-// Definición del tipo de categoría
 interface Categoria {
   _id: string;
   nombre: string;
@@ -19,10 +17,9 @@ const ListaCategorias: React.FC = () => {
   });
   const [token, setToken] = useState<string>("");
 
-  // Función para abrir el modal
   const abrirModal = (categoria?: Categoria) => {
     if (categoria) {
-      setCategoriaActual(categoria); // Editar categoría
+      setCategoriaActual(categoria);
     }
     setModalAbierto(true);
   };
@@ -37,9 +34,8 @@ const ListaCategorias: React.FC = () => {
     }
   };
 
-  // Función para obtener todas las categorías
   const getAllCategories = async () => {
-    if (!token) return; // No hacer la petición si el token no está disponible
+    if (!token) return; 
 
     try {
       const res = await fetch(`http://localhost:3000/api/category`, {
@@ -60,7 +56,6 @@ const ListaCategorias: React.FC = () => {
     }
   };
 
-  // Función para actualizar el localStorage
   const actualizarLocalStorageCategorias = (categoriasActualizadas: Array<Categoria>) => {
     localStorage.setItem('categorias', JSON.stringify(categoriasActualizadas));
   };
@@ -90,7 +85,6 @@ const ListaCategorias: React.FC = () => {
           console.error("Error al editar la categoría:", error);
         }
       } else {
-        // Agregar nueva categoría
         try {
           const response = await fetch('http://localhost:3000/api/category', {
             method: 'POST',
@@ -125,7 +119,6 @@ const ListaCategorias: React.FC = () => {
     }
   };
 
-  // Función para eliminar una categoría por ID
   const eliminarCategoria = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:3000/api/deleteCategory/${id}`, {
@@ -153,16 +146,14 @@ const ListaCategorias: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Solo realizar la llamada a la API si el token está disponible
     if (token) {
       getAllCategories();
     }
-  }, [token]); // Dependemos de 'token' para obtener las categorías
+  }, [token]); 
 
   useEffect(() => {
-    // Esto es solo para depurar, puedes eliminarlo cuando todo funcione
     console.log("Categorías actualizadas:", categorias);
-  }, [categorias]); // Verifica que el estado de categorias se actualice correctamente
+  }, [categorias]);
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">

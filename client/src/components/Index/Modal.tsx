@@ -14,7 +14,7 @@ interface productsInterface {
 interface ModalProps {
   onClose: () => void;
   onSave: (data: productsInterface) => void;
-  initialData: productsInterface; // Producto que se va a editar
+  initialData: productsInterface;
 }
 
 const Modal: React.FC<ModalProps> = ({ onClose, onSave, initialData }) => {
@@ -30,7 +30,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onSave, initialData }) => {
   const handleSubmit = async () => {
     try {
       const formData = {
-        ...initialData, // Incluimos el _id del producto original
+        ...initialData,
         costo,
         descripcion,
         idProvider,
@@ -50,15 +50,15 @@ const Modal: React.FC<ModalProps> = ({ onClose, onSave, initialData }) => {
       if (!res.ok) {
         throw new Error('Error al consultar a la base de dat  os')
       }
-      onSave(formData); // Llamamos a onSave con los datos actualizados
-      onClose(); // Cerramos el modal
+      onSave(formData); 
+      onClose();
     } catch (error) {
       throw new Error('Error al editar producto')
     }
 
   };
 
-    // Cargar los proveedores del localStorage
+   
     useEffect(() => {
       let token = localStorage.getItem('sesiontoken')
       if (token) {

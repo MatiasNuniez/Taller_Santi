@@ -3,7 +3,6 @@ import { productsInterface } from '../../interfaces/Interfaces';
 
 const ShoppingCart: React.FC = () => {
   const [cart, setCart] = useState<Array<productsInterface>>([]);
-  const [cartCopy, setCartCopy] = useState<Array<productsInterface>>([]);
   const [promo, setPromo] = useState<number>(0);
   const [totalValue, setTotalValue] = useState<number>(0);
   const [token, setToken] = useState<string>('')
@@ -27,9 +26,7 @@ const ShoppingCart: React.FC = () => {
 
   const increaseQuantity = (id: string) => {
     const product = cart.find((product) => product._id === id);
-    // const quantityController = cartCopy.find((productCopy) => productCopy._id === id);
     if (product ) {
-      // && quantityController && product.cantidad < quantityController.cantidad
       updateQuantity(id, product.cantidad + 1);
     }
   };
@@ -57,10 +54,8 @@ const ShoppingCart: React.FC = () => {
 
   const getCart = () => {
     const cartStored = localStorage.getItem('cart');
-    // const cartStoredCopy = localStorage.getItem('cart');
     if (cartStored) {
       setCart(JSON.parse(cartStored));
-      // setCartCopy(JSON.parse(cartStoredCopy));
     }
   };
 

@@ -29,7 +29,7 @@ export class ProviderController {
         }
     }
 
-    // Agregar proveedores
+
     public async addProvider(req: Request, res: Response) {
         const { provider } = req.body;
         const authHeader = req.headers['authorization'];
@@ -80,9 +80,9 @@ export class ProviderController {
 
 
 
-    // Editar proveedores
+
     public async editProvider(req: Request, res: Response) {
-        // Obtenemos el id del proveedor y los datos a editar
+
         const { idProvider, data } = req.body;
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
@@ -93,29 +93,29 @@ export class ProviderController {
         try {
             const decoded = jsonwebtoken.verify(token, SECRETKEY || '') as { id: string };
             const user = await userModel.findById(decoded.id);
-            // Verificamos que los datos y el ID del proveedor existan
+
             if (!idProvider || !data) {
                 return res.status(400).json({ message: 'Faltan datos' });
             }
 
             if ((user) && (user.state === true)) {
                 try {
-                    // Actualizamos el proveedor utilizando findByIdAndUpdate
+
                     const updatedProvider = await providerModel.findByIdAndUpdate(
                         idProvider,
                         data,
-                        { new: true } //Devuelve el documento actualizado
+                        { new: true }
                     );
 
-                    // Si no existe el proveedor devolvemos un 404
+
                     if (!updatedProvider) {
                         return res.status(404).json({ message: 'Proveedor no encontrado' });
                     }
 
-                    // Devolvemos el proveedor actualizado
+
                     return res.status(200).json(updatedProvider);
                 } catch (error) {
-                    // Devolvemos un 500 si hay error con el servidor
+
                     return res.status(500).json({ message: 'Error interno del servidor', error });
                 }
             }
@@ -126,7 +126,7 @@ export class ProviderController {
     }
 
     public async deleteProvider(req: Request, res: Response) {
-        // Obtenemos los datos del front
+
         const { providerId } = req.params
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
@@ -138,14 +138,14 @@ export class ProviderController {
         try {
             const decoded = jsonwebtoken.verify(token, SECRETKEY || '') as { id: string };
             const user = await userModel.findById(decoded.id);
-            // Verificamos que se pase el id
+
             if (!providerId) {
                 return res.status(400).json({ message: 'Falta el id del elemento que se quiere eliminar' })
             }
 
             if (user && user.rol === 'admin' && user.state === true) {
                 try {
-                    // Buscamos el elemento a eliminar y verificamos que exista para poder eliminarlo
+                   
                     const deletepProvider = await providerModel.findByIdAndDelete(providerId)
                     if (!deletepProvider) {
                         return res.status(404).json({ message: 'Error al eliminar proveedor' })

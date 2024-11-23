@@ -12,13 +12,10 @@ export class LoginController {
     }
 
 
-    // Funcion para realizar el login
     public async login(req: Request, res: Response) {
         try {
-            // Obtenemos los datos del front y ademas buscamos el usuario que quiere iniciar sesion
             const data = req.body
             const user = await userModel.findOne({ DNI: data.DNI })
-            // Verificamos que exista el usuario, coincida la password y que la secret key exista
             if ((user) && (user.password === data.password) && (this.key !== '')) {
                 const payload = { id: user._id, rol: user.rol, check: true }
                 const token = jsonwebtoken.sign(payload, this.key)

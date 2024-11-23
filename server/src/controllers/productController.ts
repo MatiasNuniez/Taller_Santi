@@ -41,7 +41,7 @@ export class ProductController {
     }
 
 
-    // Agregamos un nuevo producto
+
     public async addProduct(req: Request, res: Response) {
         const { product } = req.body;
         const authHeader = req.headers['authorization'];
@@ -54,19 +54,19 @@ export class ProductController {
         try {
             const decoded = jsonwebtoken.verify(token, SECRETKEY || '') as { id: string };
             const user = await userModel.findById(decoded.id);
-            // Verificar si el usuario existe
+
             if (!user) {
                 return res.status(404).json({ error: 'Usuario no encontrado' });
             }
 
-            // Verificar si el usuario tiene rol de admin y su estado es activo
+  
             if (user.state) {
-                // Validar que los datos del producto sean correctos
+
                 if (!product.nombre || !product.costo || !product.descripcion || !product.precio_u || !product.idProvider || !product.cantidad) {
                     return res.status(400).json({ error: 'Datos del producto incompletos o inválidos' });
                 }
 
-                // Crear el nuevo producto
+
                 const newProduct: productInterface = {
                     nombre: product.nombre,
                     costo: product.costo,
@@ -79,14 +79,14 @@ export class ProductController {
                     marca: product.marca
                 };
 
-                // Guardar el nuevo producto en la base de datos
+
                 const addNewProduct = await productModel.create(newProduct);
 
-                // Retornar el producto agregado como respuesta
+
                 return res.status(200).json(addNewProduct);
             }
 
-            // Si el usuario no tiene permisos
+
             return res.status(401).json({ error: 'No posee los permisos necesarios' });
 
         } catch (error) {
@@ -95,7 +95,6 @@ export class ProductController {
     }
 
 
-    // Editar productos
     public async editProduct(req: Request, res: Response) {
         const { idProduct, data } = req.body;
         const authHeader = req.headers['authorization'];
@@ -139,7 +138,7 @@ export class ProductController {
         }
     }
 
-    // Eliminar producto
+
     public async deleteProduct(req: Request, res: Response) {
         const { productId } = req.params;
 

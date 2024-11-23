@@ -4,7 +4,7 @@ import { categoryInterface } from '../../interfaces/Interfaces';
 import { ProviderInterface } from '../../interfaces/Interfaces';
 
 const AddProduct: React.FC = () => {
-    // Estado para el producto
+
     const [product, setProduct] = useState<productInterface>({
         costo: 0,
         descripcion: '',
@@ -49,7 +49,7 @@ const AddProduct: React.FC = () => {
         }
     }
 
-    // Función para manejar los cambios en los campos del formulario
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setProduct({
@@ -70,13 +70,13 @@ const AddProduct: React.FC = () => {
             try {
                 const productComplete = {
                     ...product,
-                    img: categories[Number(indexCategoria)]?.urlImg || '', // Asegura que urlImg esté disponible
+                    img: categories[Number(indexCategoria)]?.urlImg || '',
                     categoria: categories[Number(indexCategoria)]?.nombre || '',
                     marca: categories[Number(indexCategoria)]?.marca || '',
                     idProvider: idProviderState,
                 };
 
-                console.log('Producto completo antes de enviar:', productComplete); // Verifica que los datos estén correctos
+                console.log('Producto completo antes de enviar:', productComplete);
 
                 const res = await fetch('http://localhost:3000/api/newProduct', {
                     method: 'POST',
@@ -124,7 +124,7 @@ const AddProduct: React.FC = () => {
     };
     
     const handleChangeCategoria = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const index = e.target.selectedIndex - 1; // Ajusta el índice ya que el primer valor es "Seleccione una categoría"
+        const index = e.target.selectedIndex - 1; 
         if (index >= 0) {
             setIndexCategoria(index);
         } else {
@@ -133,7 +133,7 @@ const AddProduct: React.FC = () => {
     };
     
     const handleChangeMarca = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const index = e.target.selectedIndex - 1; // Ajusta el índice por la opción por defecto
+        const index = e.target.selectedIndex - 1;
         if (index >= 0) {
             setIndexMarca(index);
         } else {

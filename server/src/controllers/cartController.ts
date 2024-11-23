@@ -59,12 +59,10 @@ export class CartController {
 
             console.log(paymentInfo);
 
-            // Verifica el estado del pago
             if (paymentInfo && paymentInfo.type === "payment") {
                 const paymentId = paymentInfo.data.id;
 
 
-                // Consulta los detalles del pago a MercadoPago
                 const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
                     headers: {
                         Authorization: `Bearer TEST-903469415048232-111315-4ddab3feef798fb6dbfeadc87e4bf3e7-322177690`,

@@ -24,10 +24,9 @@ class Server extends DataBase {
 
     public config() {
         this.app.use(cors({
-            origin: '*', // Cambia al dominio de tu cliente
-            methods: 'GET,POST,PUT,PATCH,DELETE',   // Cambiar '*' a una URL específica si necesitas habilitar credenciales
+            origin: '*',
+            methods: 'GET,POST,PUT,PATCH,DELETE',  
         }))
-        // Asegúrate de que express pueda parsear JSON
         this.app.use(express.json())
     }
 

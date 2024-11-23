@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { productsInterface } from "../../interfaces/Interfaces";
 import Modal from './Modal';
-import { useNavigate } from "react-router-dom"; // Asegúrate de tener instalado react-router-dom
+import { useNavigate } from "react-router-dom";
 
 const Index: React.FC = () => {
   const [products, setProducts] = useState<Array<productsInterface>>([]);
@@ -11,18 +11,18 @@ const Index: React.FC = () => {
   const [buscado, setBuscado] = useState<string>('');
   const [token, setToken] = useState<string>('');
   const [rol, setRol] = useState<string>('');
-  const navigate = useNavigate(); // Hook para navegación
+  const navigate = useNavigate(); 
 
-  // Función de filtrado que recibe productos y el término de búsqueda
+
   const filtrado = (character: Array<productsInterface>, buscado: string) => {
     if (!buscado) return character;
     return character.filter((p) => p.nombre.toLowerCase().includes(buscado.toLowerCase()));
   };
 
-  // Asignacion de los resultados a la variable para poder mapearlo cuando se cambie el valor.
+
   const filterProducts = filtrado(products, buscado);
 
-  // Funcion para agregar productos al carrito
+
   const addToCart = (newProduct: productsInterface) => {
     const cartStored = localStorage.getItem('cart');
 
@@ -38,7 +38,6 @@ const Index: React.FC = () => {
     localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
-  // Funcion para remover un dato de la base de datos y localstorage
   const removeToDDBB = async (id: string) => {
     try {
       const deleteProduct = await fetch(`http://localhost:3000/api/deleteProduct/${id}`, {
@@ -54,13 +53,13 @@ const Index: React.FC = () => {
       throw new Error('Error al eliminar elemento');
     }
   };
-  // Funcion para pasarle al modal para poder llevar los datos del producto que quiero editar.
+
   const handleEdit = (product: productsInterface) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
   };
 
-  // Funcion para actualizar los datos de los productos actualizados
+
   const handleSave = (updatedProduct: any) => {
     const updatedProducts = products.map((product) =>
       product._id === updatedProduct._id ? updatedProduct : product
@@ -69,7 +68,7 @@ const Index: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  // Funcion para actualizar el buscado cada vez que se cambie el valor del input.
+
   const handleBusc = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
     setBuscado(searchValue);
