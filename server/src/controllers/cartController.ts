@@ -66,7 +66,7 @@ export class CartController {
             if (paymentInfo && paymentInfo.type === "payment") {
                 const paymentId = paymentInfo.data.id;
     
-                // Obtener detalles del pago desde la API de MercadoPago
+
                 const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
                     headers: {
                         Authorization: `Bearer TEST-903469415048232-111315-4ddab3feef798fb6dbfeadc87e4bf3e7-322177690`,
@@ -80,24 +80,22 @@ export class CartController {
                 const paymentDetails = await response.json();
                 console.log("datos del pago", paymentDetails);
     
-                // Validar si el pago fue aprobado
+
                 if (paymentDetails.status === "approved") {
-                    // Registrar la venta en el modelo de ventas
+
                     const nuevaVenta: VentaInterface = {
                         fecha: Date.now(),
                         idVenta: paymentDetails.id,
                         total: paymentDetails.transaction_amount,
                     };
                     await ventaModel.create(nuevaVenta);
-    
-                    // Iterar sobre los productos comprados
+
                     const items = paymentDetails.additional_info.items;
     
                     for (const item of items) {
-                        const productId = item.id; // ID del producto
-                        const quantityPurchased = item.quantity; // Cantidad comprada
+                        const productId = item.id; 
+                        const quantityPurchased = item.quantity; 
     
-                        // Buscar el producto en la base de datos
                         const product = await productModel.findById(productId);
     
                         if (!product) {
@@ -105,18 +103,15 @@ export class CartController {
                             continue;
                         }
     
-                        // Verificar stock disponible
                         if (product.cantidad < quantityPurchased) {
                             console.warn(
                                 `Stock insuficiente para el producto ${productId}. Stock actual: ${product.cantidad}, solicitado: ${quantityPurchased}`
                             );
-                            continue; // Salta a la siguiente iteración si no hay suficiente stock
+                            continue; 
                         }
     
-                        // Calcular nueva cantidad
                         const updatedQuantity = product.cantidad - quantityPurchased;
     
-                        // Actualizar la cantidad en la base de datos
                         await productModel.findByIdAndUpdate(productId, { cantidad: updatedQuantity });
     
                         console.log(

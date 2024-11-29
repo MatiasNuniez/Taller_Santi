@@ -27,7 +27,7 @@ const ShoppingCart: React.FC = () => {
   const increaseQuantity = (id: string) => {
     const product = cart.find((product) => product._id === id);
     if (product) {
-      // Verifica que la cantidad actual no exceda el stock disponible
+
       if (product.cantidad < product.stock) {
         updateQuantity(id, product.cantidad + 1);
       } else {
@@ -71,26 +71,23 @@ const ShoppingCart: React.FC = () => {
 
   const fetchBuyMP = async () => {
     try {
-      // Calcular el total con el descuento aplicado
       const totalWithDiscount = calculateTotal() * (1 - promo / 100);
 
-      // Construir los productos con precios ajustados por el descuento
       const items = cart.map((product) => ({
         id: product._id,
         title: product.nombre,
-        unit_price: product.precio_u * (1 - promo / 100), // Aplica el descuento al precio unitario
+        unit_price: product.precio_u * (1 - promo / 100), 
         quantity: product.cantidad,
         description: product.descripcion,
         currency_id: 'ARS',
       }));
 
-      // Enviar los datos ajustados al servidor
       const res = await fetch('http://localhost:3000/api/cartPayment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ items, total: totalWithDiscount }), // Incluye el total ajustado
+        body: JSON.stringify({ items, total: totalWithDiscount }),
       });
 
       const data = await res.json();

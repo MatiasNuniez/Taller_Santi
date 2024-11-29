@@ -1,2 +1,1 @@
--disminucion de cantidad x cada venta. //dificil
--Carrito, que arranque en 1. //dificl
+- Que en el carrito las unidades del producto arranque en 1
