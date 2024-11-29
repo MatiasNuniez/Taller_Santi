@@ -32,7 +32,7 @@ function App() {
 
           <Route path='/dashboard/categories' Component={ListaCategorias}/>
 
-          <Route path='/cart' Component={Cart}/>
+          <Route path='/ventas' Component={Cart}/>
 
           <Route path='/SalesHistory' Component={SalesHistory}/>
 

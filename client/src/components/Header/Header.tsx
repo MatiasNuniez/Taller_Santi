@@ -107,10 +107,10 @@ const Header: React.FC = () => {
                 Inicio
               </Link>
               <Link
-                to="/cart"
+                to="/ventas"
                 className="text-[#8B4513] font-bold hover:text-white transition-colors"
               >
-                Carrito
+                Ventas
               </Link>
               <Link
                 to="/dashboard"
@@ -122,7 +122,7 @@ const Header: React.FC = () => {
                 to="/SalesHistory"
                 className="text-[#8B4513] font-bold hover:text-white transition-colors"
               >
-                Ventas
+                Historial
               </Link>
               <button
                 onClick={handleLogout}
@@ -162,8 +162,8 @@ const Header: React.FC = () => {
                 <Link to="/" className="block text-white hover:text-gray-300">
                   Inicio
                 </Link>
-                <Link to="/cart" className="block text-white hover:text-gray-300">
-                  Carrito
+                <Link to="/ventas" className="block text-white hover:text-gray-300">
+                  Ventas
                 </Link>
                 <Link to="/dashboard" className="block text-white hover:text-gray-300">
                   Dashboard
@@ -172,7 +172,7 @@ const Header: React.FC = () => {
                   to="/SalesHistory"
                   className="text-[#8B4513] font-bold hover:text-white transition-colors"
                 >
-                  Ventas
+                  Historial
                 </Link>
                 <button
                   onClick={handleLogout}

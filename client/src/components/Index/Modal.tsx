@@ -9,6 +9,7 @@ interface productsInterface {
   precio_u: number;
   img: string;
   idProvider: string;
+  cantidad: number; 
 }
 
 interface ModalProps {
@@ -24,8 +25,9 @@ const Modal: React.FC<ModalProps> = ({ onClose, onSave, initialData }) => {
   const [nombre, setNombre] = useState<string>(initialData.nombre);
   const [precioU, setPrecioU] = useState<number>(initialData.precio_u);
   const [img, setImg] = useState<string>(initialData.img);
+  const [cantidad, setCantidad] = useState<number>(initialData.cantidad || 0);
   const [proveedores, setProveedores] = useState<ProviderInterface[]>([]);
-  const [token, setToken] = useState<string>('')
+  const [token, setToken] = useState<string>('');
 
   const handleSubmit = async () => {
     try {
@@ -37,38 +39,37 @@ const Modal: React.FC<ModalProps> = ({ onClose, onSave, initialData }) => {
         nombre,
         precio_u: precioU,
         img,
+        cantidad
       };
       console.log(formData);
       const res = await fetch('http://localhost:3000/api/editProduct', {
-        method:'PATCH',
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ idProduct: formData._id, data: formData })
-      })
+        body: JSON.stringify({ idProduct: formData._id, data: formData }),
+      });
       if (!res.ok) {
-        throw new Error('Error al consultar a la base de dat  os')
+        throw new Error('Error al consultar a la base de datos');
       }
-      onSave(formData); 
+      onSave(formData);
       onClose();
     } catch (error) {
-      throw new Error('Error al editar producto')
+      throw new Error('Error al editar producto');
     }
-
   };
 
-   
-    useEffect(() => {
-      let token = localStorage.getItem('sesiontoken')
-      if (token) {
-        setToken(token)
-      }
-      const storedProviders = localStorage.getItem('proveedores');
-      if (storedProviders) {
-        setProveedores(JSON.parse(storedProviders));
-      }
-    }, []);
+  useEffect(() => {
+    const token = localStorage.getItem('sesiontoken');
+    if (token) {
+      setToken(token);
+    }
+    const storedProviders = localStorage.getItem('proveedores');
+    if (storedProviders) {
+      setProveedores(JSON.parse(storedProviders));
+    }
+  }, []);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
@@ -122,6 +123,16 @@ const Modal: React.FC<ModalProps> = ({ onClose, onSave, initialData }) => {
             className="w-full mt-1 p-2 border border-gray-300 rounded-md"
             value={img}
             onChange={(e) => setImg(e.target.value)}
+          />
+        </label>
+
+        <label className="block mb-2">
+          Cantidad:
+          <input
+            type="number"
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+            value={cantidad}
+            onChange={(e) => setCantidad(Number(e.target.value))}
           />
         </label>
 

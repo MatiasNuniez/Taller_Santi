@@ -200,7 +200,7 @@ const eliminarProveedor = async (id: string) => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
             <h2 className="text-xl font-bold mb-4">
-              {proveedorActual ? "Editar Proveedor" : "Agregar Proveedor"}
+              {proveedorActual._id && proveedorActual.apellido && proveedorActual.cuit && proveedorActual.direccion && proveedorActual.email && proveedorActual.nombre && proveedorActual.telefono ? "Editar Proveedor" : "Agregar Proveedor"}
             </h2>
             <div className="mb-4">
               <label className="block text-sm font-medium">Nombre</label>

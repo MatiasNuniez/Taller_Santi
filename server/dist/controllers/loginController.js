@@ -20,14 +20,11 @@ class LoginController {
     constructor() {
         this.key = config_1.SECRETKEY || '';
     }
-    // Funcion para realizar el login
     login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // Obtenemos los datos del front y ademas buscamos el usuario que quiere iniciar sesion
                 const data = req.body;
                 const user = yield usersModel_1.userModel.findOne({ DNI: data.DNI });
-                // Verificamos que exista el usuario, coincida la password y que la secret key exista
                 if ((user) && (user.password === data.password) && (this.key !== '')) {
                     const payload = { id: user._id, rol: user.rol, check: true };
                     const token = jsonwebtoken_1.default.sign(payload, this.key);

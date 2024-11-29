@@ -211,7 +211,7 @@ const ListaCategorias: React.FC = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
             <h2 className="text-xl font-bold mb-4">
-              {categoriaActual ? "Editar Categoría" : "Agregar Categoría"}
+              {categoriaActual._id && categoriaActual.marca && categoriaActual.nombre && categoriaActual.urlImg ? "Editar Categoría" : "Agregar Categoría"}
             </h2>
             <div className="mb-4">
               <label className="block text-sm font-medium">Nombre</label>

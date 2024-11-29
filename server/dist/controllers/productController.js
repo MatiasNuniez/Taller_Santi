@@ -46,7 +46,6 @@ class ProductController {
             }
         });
     }
-    // Agregamos un nuevo producto
     addProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { product } = req.body;
@@ -58,17 +57,13 @@ class ProductController {
             try {
                 const decoded = jsonwebtoken_1.default.verify(token, config_1.SECRETKEY || '');
                 const user = yield usersModel_1.userModel.findById(decoded.id);
-                // Verificar si el usuario existe
                 if (!user) {
                     return res.status(404).json({ error: 'Usuario no encontrado' });
                 }
-                // Verificar si el usuario tiene rol de admin y su estado es activo
                 if (user.state) {
-                    // Validar que los datos del producto sean correctos
                     if (!product.nombre || !product.costo || !product.descripcion || !product.precio_u || !product.idProvider || !product.cantidad) {
                         return res.status(400).json({ error: 'Datos del producto incompletos o inválidos' });
                     }
-                    // Crear el nuevo producto
                     const newProduct = {
                         nombre: product.nombre,
                         costo: product.costo,
@@ -80,12 +75,9 @@ class ProductController {
                         img: product.urlImg,
                         marca: product.marca
                     };
-                    // Guardar el nuevo producto en la base de datos
                     const addNewProduct = yield productsModel_1.productModel.create(newProduct);
-                    // Retornar el producto agregado como respuesta
                     return res.status(200).json(addNewProduct);
                 }
-                // Si el usuario no tiene permisos
                 return res.status(401).json({ error: 'No posee los permisos necesarios' });
             }
             catch (error) {
@@ -93,7 +85,6 @@ class ProductController {
             }
         });
     }
-    // Editar productos
     editProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { idProduct, data } = req.body;
@@ -129,7 +120,6 @@ class ProductController {
             }
         });
     }
-    // Eliminar producto
     deleteProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { productId } = req.params;

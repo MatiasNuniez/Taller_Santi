@@ -3,12 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductRouter = void 0;
 const baseRouter_1 = require("./baseRouter");
 const productController_1 = require("../controllers/productController");
-// Creamos la clase para agregar un producto
 class ProductRouter extends baseRouter_1.BaseRouter {
     constructor() {
         super(productController_1.ProductController);
     }
-    // Rutas para las peticiones de productos
     routes() {
         this.router.get('/products', (req, res) => this.controller.getAllProducts(req, res));
         this.router.post('/newProduct', (req, res) => this.controller.addProduct(req, res));

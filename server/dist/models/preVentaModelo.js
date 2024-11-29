@@ -23,50 +23,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userModel = void 0;
+exports.preVentaModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const userTypes_1 = require("../enums/userTypes");
-class usersModel {
+class PreVentaModel {
     constructor() {
-        const userModel = new mongoose_1.Schema({
-            nombre: {
-                type: String,
-                required: true
-            },
-            apellido: {
-                type: String,
-                required: true
-            },
-            direccion: {
-                type: String,
-                required: true
-            },
-            telefono: {
-                type: String,
-                minlength: 10,
-                required: true
-            },
-            rol: {
-                type: String,
-                enum: userTypes_1.UserTypes,
-                default: userTypes_1.UserTypes.employed
-            },
-            password: {
-                type: String,
-                minlength: 6,
-                required: true
-            },
-            DNI: {
+        const PreVentaModel = new mongoose_1.Schema({
+            idVenta: {
                 type: String,
                 required: true,
-                unique: true
             },
-            state: {
-                type: Boolean,
-                default: true
-            }
+            productos: [{
+                    type: mongoose_1.default.Schema.Types.ObjectId,
+                    ref: 'Products',
+                    required: true,
+                }]
         });
-        this._model = mongoose_1.default.model('user', userModel);
+        this._model = mongoose_1.default.model('preVentaModel', PreVentaModel);
     }
 }
-exports.userModel = new usersModel()._model;
+exports.preVentaModel = new PreVentaModel()._model;

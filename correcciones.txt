@@ -1,0 +1,2 @@
+-disminucion de cantidad x cada venta. //dificil
+-Carrito, que arranque en 1. //dificl

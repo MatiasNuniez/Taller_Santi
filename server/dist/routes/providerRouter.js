@@ -3,12 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProviderRouter = void 0;
 const providerController_1 = require("../controllers/providerController");
 const baseRouter_1 = require("./baseRouter");
-// Creamos la clase para agregar un nuevo producto
 class ProviderRouter extends baseRouter_1.BaseRouter {
     constructor() {
         super(providerController_1.ProviderController);
     }
-    // Rutas para las peticiones de proveedores
     routes() {
         this.router.get('/providers', (req, res) => this.controller.getAllProviders(req, res));
         this.router.post('/newProvider', (req, res) => this.controller.addProvider(req, res));

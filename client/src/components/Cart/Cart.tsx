@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { productsInterface } from '../../interfaces/Interfaces';
 
 const ShoppingCart: React.FC = () => {
-  const [cart, setCart] = useState<Array<productsInterface>>([]);
+  const [cart, setCart] = useState<Array<productsInterface & { stock: number }>>([]);
   const [promo, setPromo] = useState<number>(0);
   const [totalValue, setTotalValue] = useState<number>(0);
   const [token, setToken] = useState<string>('')
@@ -16,7 +16,7 @@ const ShoppingCart: React.FC = () => {
   const updateQuantity = (id: string, quantity: number) => {
     const updatedCart = cart.map((product) => {
       if (product._id === id) {
-        return { ...product, cantidad: quantity }; 
+        return { ...product, cantidad: quantity };
       }
       return product;
     });
@@ -26,15 +26,20 @@ const ShoppingCart: React.FC = () => {
 
   const increaseQuantity = (id: string) => {
     const product = cart.find((product) => product._id === id);
-    if (product ) {
-      updateQuantity(id, product.cantidad + 1);
+    if (product) {
+      // Verifica que la cantidad actual no exceda el stock disponible
+      if (product.cantidad < product.stock) {
+        updateQuantity(id, product.cantidad + 1);
+      } else {
+        alert("No puedes agregar más, has alcanzado el límite de stock.");
+      }
     }
   };
 
   const decreaseQuantity = (id: string) => {
     const product = cart.find((product) => product._id === id);
     if (product && product.cantidad > 1) {
-      updateQuantity(id, product.cantidad - 1); 
+      updateQuantity(id, product.cantidad - 1);
     }
   };
 
@@ -55,19 +60,38 @@ const ShoppingCart: React.FC = () => {
   const getCart = () => {
     const cartStored = localStorage.getItem('cart');
     if (cartStored) {
-      setCart(JSON.parse(cartStored));
+      const cartData = JSON.parse(cartStored);
+      const updatedCart = cartData.map((product: productsInterface) => ({
+        ...product,
+        stock: product.cantidad,
+      }));
+      setCart(updatedCart);
     }
   };
 
   const fetchBuyMP = async () => {
     try {
+      // Calcular el total con el descuento aplicado
+      const totalWithDiscount = calculateTotal() * (1 - promo / 100);
+
+      // Construir los productos con precios ajustados por el descuento
+      const items = cart.map((product) => ({
+        id: product._id,
+        title: product.nombre,
+        unit_price: product.precio_u * (1 - promo / 100), // Aplica el descuento al precio unitario
+        quantity: product.cantidad,
+        description: product.descripcion,
+        currency_id: 'ARS',
+      }));
+
+      // Enviar los datos ajustados al servidor
       const res = await fetch('http://localhost:3000/api/cartPayment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ amount: totalValue, description: cart, id: `${totalValue}${cart[0].costo}` })
-      })
+        body: JSON.stringify({ items, total: totalWithDiscount }), // Incluye el total ajustado
+      });
 
       const data = await res.json();
       console.log(data);
@@ -75,11 +99,11 @@ const ShoppingCart: React.FC = () => {
       if (res.ok) {
         window.location.href = data;
       }
-
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+
 
   useEffect(() => {
     getCart();
@@ -118,20 +142,20 @@ const ShoppingCart: React.FC = () => {
                   <h3 className="font-semibold">{product.nombre}</h3>
                   <p className="text-gray-500">Precio: ${product.precio_u}</p>
                   <div className="flex items-center mt-2">
-                    <button 
-                      onClick={() => decreaseQuantity(product._id)} 
+                    <button
+                      onClick={() => decreaseQuantity(product._id)}
                       className="px-2 py-1 bg-gray-300 rounded-l hover:bg-gray-400"
                     >
                       -
                     </button>
-                    <input 
-                      type="number" 
-                      value={product.cantidad} 
-                      readOnly 
-                      className="w-16 text-center border-t border-b border-gray-300" 
+                    <input
+                      type="number"
+                      value={product.cantidad}
+                      readOnly
+                      className="w-16 text-center border-t border-b border-gray-300"
                     />
-                    <button 
-                      onClick={() => increaseQuantity(product._id)} 
+                    <button
+                      onClick={() => increaseQuantity(product._id)}
                       className="px-2 py-1 bg-gray-300 rounded-r hover:bg-gray-400"
                     >
                       +

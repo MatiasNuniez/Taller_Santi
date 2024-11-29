@@ -25,10 +25,9 @@ class Server extends db_1.DataBase {
     }
     config() {
         this.app.use((0, cors_1.default)({
-            origin: '*', // Cambia al dominio de tu cliente
-            methods: 'GET,POST,PUT,PATCH,DELETE', // Cambiar '*' a una URL específica si necesitas habilitar credenciales
+            origin: '*',
+            methods: 'GET,POST,PUT,PATCH,DELETE',
         }));
-        // Asegúrate de que express pueda parsear JSON
         this.app.use(express_1.default.json());
     }
     listen() {
