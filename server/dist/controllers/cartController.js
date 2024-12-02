@@ -42,7 +42,7 @@ class CartController {
                     },
                     auto_return: 'approved',
                     binary_mode: true,
-                    notification_url: 'https://4ce0-190-136-150-11.ngrok-free.app/api/paymentInfo',
+                    notification_url: 'https://c461-190-136-150-11.ngrok-free.app/api/paymentInfo',
                     payer: {
                         email: req.body.email || "comprador@mail.com",
                     },
@@ -65,7 +65,6 @@ class CartController {
                 console.log(paymentInfo);
                 if (paymentInfo && paymentInfo.type === "payment") {
                     const paymentId = paymentInfo.data.id;
-                    // Obtener detalles del pago desde la API de MercadoPago
                     const response = yield fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
                         headers: {
                             Authorization: `Bearer TEST-903469415048232-111315-4ddab3feef798fb6dbfeadc87e4bf3e7-322177690`,
@@ -76,34 +75,27 @@ class CartController {
                     }
                     const paymentDetails = yield response.json();
                     console.log("datos del pago", paymentDetails);
-                    // Validar si el pago fue aprobado
                     if (paymentDetails.status === "approved") {
-                        // Registrar la venta en el modelo de ventas
                         const nuevaVenta = {
                             fecha: Date.now(),
                             idVenta: paymentDetails.id,
                             total: paymentDetails.transaction_amount,
                         };
                         yield ventaModel_1.ventaModel.create(nuevaVenta);
-                        // Iterar sobre los productos comprados
                         const items = paymentDetails.additional_info.items;
                         for (const item of items) {
-                            const productId = item.id; // ID del producto
-                            const quantityPurchased = item.quantity; // Cantidad comprada
-                            // Buscar el producto en la base de datos
+                            const productId = item.id;
+                            const quantityPurchased = item.quantity;
                             const product = yield productsModel_1.productModel.findById(productId);
                             if (!product) {
                                 console.warn(`Producto con ID ${productId} no encontrado.`);
                                 continue;
                             }
-                            // Verificar stock disponible
                             if (product.cantidad < quantityPurchased) {
                                 console.warn(`Stock insuficiente para el producto ${productId}. Stock actual: ${product.cantidad}, solicitado: ${quantityPurchased}`);
-                                continue; // Salta a la siguiente iteración si no hay suficiente stock
+                                continue;
                             }
-                            // Calcular nueva cantidad
                             const updatedQuantity = product.cantidad - quantityPurchased;
-                            // Actualizar la cantidad en la base de datos
                             yield productsModel_1.productModel.findByIdAndUpdate(productId, { cantidad: updatedQuantity });
                             console.log(`Producto ${productId} actualizado. Stock restante: ${updatedQuantity}`);
                         }

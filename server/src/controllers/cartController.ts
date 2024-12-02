@@ -38,7 +38,7 @@ export class CartController {
                 },
                 auto_return: 'approved',
                 binary_mode: true,
-                notification_url: 'https://4ce0-190-136-150-11.ngrok-free.app/api/paymentInfo',
+                notification_url: 'https://c461-190-136-150-11.ngrok-free.app/api/paymentInfo',
                 payer: {
                     email: req.body.email || "comprador@mail.com",
                 },

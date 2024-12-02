@@ -64,6 +64,7 @@ const ShoppingCart: React.FC = () => {
       const updatedCart = cartData.map((product: productsInterface) => ({
         ...product,
         stock: product.cantidad,
+        cantidad:1
       }));
       setCart(updatedCart);
     }
