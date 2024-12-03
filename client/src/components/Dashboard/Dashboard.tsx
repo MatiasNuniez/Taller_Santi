@@ -59,7 +59,7 @@ const Dashboard: React.FC = () => {
                         Administra las ventas del sistema.
                     </p>
                     <Link
-                        to="/admin/gestion-usuarios"
+                        to="/ventas"
                         className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
                     >
                         Historial de ventas
